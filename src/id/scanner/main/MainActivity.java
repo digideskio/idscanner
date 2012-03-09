@@ -8,20 +8,27 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RemoteViews.RemoteView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
-	private static final int MEDIA_TYPE_IMAGE = 1;
 	private static final String DIR_NAME = "IDscanner";
+	private static final int MENU_INFO = 0;
 
 	
 	private Camera mCamera;
@@ -29,7 +36,7 @@ public class MainActivity extends Activity {
 
 	private PictureCallback mPicture = new PictureCallback() {
 		public void onPictureTaken(byte[] data, Camera camera) {
-			File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+			File pictureFile = getOutputMediaFile();
 			if (pictureFile == null) {
 				Log.d(TAG,"Error creating media file, check storage permission");
 				return;
@@ -97,13 +104,8 @@ public class MainActivity extends Activity {
 		return c; // returns null if camera is unavailable
 	}
 	
-	/** Create a file Uri for saving an image or video */
-	private static Uri getOutputMediaFileUri(int type){
-	      return Uri.fromFile(getOutputMediaFile(type));
-	}
-
 	/** Create a File for saving an image or video */
-	private static File getOutputMediaFile(int type){
+	private static File getOutputMediaFile(){
 	    // To be safe, you should check that the SDCard is mounted
 	    // using Environment.getExternalStorageState() before doing this.
 
@@ -122,12 +124,33 @@ public class MainActivity extends Activity {
 
 	    // Create a media file name
 	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-	    File mediaFile = null;
-	    if (type == MEDIA_TYPE_IMAGE){
-	        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-	        "IMG_"+ timeStamp + ".jpg");
-	    }
+	    File mediaFile = new File(mediaStorageDir.getPath() 
+	    		+ File.separator +"IMG_"+ timeStamp + ".jpg");
 
 	    return mediaFile;
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    super.onCreateOptionsMenu(menu);
+	    menu.add(0, MENU_INFO,0, R.string.menu_info);
+	    return true;
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	    switch(item.getItemId()) {
+	    case MENU_INFO:
+	    	Context context = getApplicationContext();
+	    	CharSequence text = getString(R.string.menu_info_text);
+	    	int duration = Toast.LENGTH_SHORT;
+
+	    	Toast toast = Toast.makeText(context, text, duration);
+	    	toast.show();
+	        return true;
+	    }
+
+	    return super.onMenuItemSelected(featureId, item);
+	}
+
 }
