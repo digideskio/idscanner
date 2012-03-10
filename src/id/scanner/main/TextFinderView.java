@@ -16,12 +16,12 @@ public class TextFinderView extends View{
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		int left=0, top=0, right=1100, bottom=800;
-		Rect rect = new Rect(left, top, right, bottom);
-		
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setColor(R.color.background);
 		
-		canvas.drawRect(rect, paint);
+		canvas.drawRect(0,0,1100,200, paint);
+		canvas.drawRect(0,200,300,800, paint);
+		canvas.drawRect(300,300,800,800, paint);
+		canvas.drawRect(800,200,1100,800, paint);
 	}
 }
