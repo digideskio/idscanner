@@ -8,25 +8,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.RemoteViews.RemoteView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	private static final String TAG = "MainActivity";
+	private static final String TAG = MainActivity.class.getSimpleName();
 	private static final String DIR_NAME = "IDscanner";
 	private static final int MENU_INFO = 0;
 
@@ -57,6 +55,11 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Keep the screen on.
+		Window window = getWindow();
+	    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
 		setContentView(R.layout.main);
 
 		// Create an instance of Camera
@@ -66,6 +69,10 @@ public class MainActivity extends Activity {
 		mPreview = new CameraPreview(this, mCamera);
 		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 		preview.addView(mPreview);
+		
+		// Add the overlay
+		TextFinderView t = new TextFinderView(this, null);
+		preview.addView(t);
 
 		// Add a listener to the Capture button
 		Button captureButton = (Button) findViewById(R.id.button_capture);
@@ -106,13 +113,8 @@ public class MainActivity extends Activity {
 	
 	/** Create a File for saving an image or video */
 	private static File getOutputMediaFile(){
-	    // To be safe, you should check that the SDCard is mounted
-	    // using Environment.getExternalStorageState() before doing this.
-
 	    File mediaStorageDir = new File(
 	    		Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), DIR_NAME);
-	    // This location works best if you want the created images to be shared
-	    // between applications and persist after your app has been uninstalled.
 
 	    // Create the storage directory if it does not exist
 	    if (! mediaStorageDir.exists()){
@@ -138,19 +140,18 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-	    switch(item.getItemId()) {
-	    case MENU_INFO:
-	    	Context context = getApplicationContext();
-	    	CharSequence text = getString(R.string.menu_info_text);
-	    	int duration = Toast.LENGTH_SHORT;
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case MENU_INFO:
+			Context context = getApplicationContext();
+			CharSequence text = getString(R.string.menu_info_text);
+			int duration = Toast.LENGTH_SHORT;
 
-	    	Toast toast = Toast.makeText(context, text, duration);
-	    	toast.show();
-	        return true;
-	    }
-
-	    return super.onMenuItemSelected(featureId, item);
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
-
 }
