@@ -4,17 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import android.app.Activity;
-import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -25,16 +22,12 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private static final String TAG = MainActivity.class.getSimpleName();
-	private static final String DIR_NAME = "IDscanner";
-	private static final int MENU_INFO = 0;
-
-	
 	private Camera mCamera;
 	private CameraPreview mPreview;
 
 	private PictureCallback mPicture = new PictureCallback() {
 		public void onPictureTaken(byte[] data, Camera camera) {
-			File pictureFile = getOutputMediaFile();
+			File pictureFile = Utils.getOutputMediaFile();
 			if (pictureFile == null) {
 				Log.d(TAG,"Error creating media file, check storage permission");
 				return;
@@ -63,7 +56,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
 
 		// Create an instance of Camera
-		mCamera = getCameraInstance();
+		mCamera = Utils.getCameraInstance();
 
 		// Create our Preview view and set it as the content of our activity.
 		mPreview = new CameraPreview(this, mCamera);
@@ -99,56 +92,25 @@ public class MainActivity extends Activity {
         }
     }
 	
-	/** A safe way to get an instance of the Camera object. */
-	public static Camera getCameraInstance() {
-		Camera c = null;
-		try {
-			c = Camera.open(); // attempt to get a Camera instance
-		} catch (Exception e) {
-			// Camera is not available (in use or does not exist)
-			Log.d(TAG, "Error getting camera instance: " + e.getMessage());
-		}
-		return c; // returns null if camera is unavailable
-	}
-	
-	/** Create a File for saving an image or video */
-	private static File getOutputMediaFile(){
-	    File mediaStorageDir = new File(
-	    		Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), DIR_NAME);
-
-	    // Create the storage directory if it does not exist
-	    if (! mediaStorageDir.exists()){
-	        if (! mediaStorageDir.mkdirs()){
-	            Log.d("MyCameraApp", "failed to create directory");
-	            return null;
-	        }
-	    }
-
-	    // Create a media file name
-	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-	    File mediaFile = new File(mediaStorageDir.getPath() 
-	    		+ File.separator +"IMG_"+ timeStamp + ".jpg");
-
-	    return mediaFile;
-	}
-	
+    
+    ///////////////////////   The menu   //////////////////////////////////////
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    super.onCreateOptionsMenu(menu);
-	    menu.add(0, MENU_INFO,0, R.string.menu_info);
+	    //menu.add(0, MENU_INFO,0, R.string.menu_info);
+	    
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+	    
 	    return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
-		case MENU_INFO:
-			Context context = getApplicationContext();
-			CharSequence text = getString(R.string.menu_info_text);
-			int duration = Toast.LENGTH_SHORT;
-
-			Toast toast = Toast.makeText(context, text, duration);
-			toast.show();
+		case R.id.item_info:
+			Toast.makeText(this, getResources().getString(R.string.menu_info_text),
+                    Toast.LENGTH_SHORT).show();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
