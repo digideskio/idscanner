@@ -39,8 +39,7 @@ public class Utils {
 		}
 
 		String focusMode = findSettableValue(parameters.getSupportedFocusModes(),
-				Camera.Parameters.FOCUS_MODE_AUTO,
-				Camera.Parameters.FOCUS_MODE_MACRO);
+				Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);   // evrika!!
 		if (focusMode != null) {
 			parameters.setFocusMode(focusMode);
 		}

@@ -37,6 +37,8 @@ public class MainActivity extends Activity {
 				FileOutputStream fos = new FileOutputStream(pictureFile);
 				fos.write(data);
 				fos.close();
+				
+				mCamera.startPreview();
 			} catch (FileNotFoundException e) {
 				Log.d(TAG, "File not found: " + e.getMessage());
 			} catch (IOException e) {
@@ -52,6 +54,8 @@ public class MainActivity extends Activity {
 		// Keep the screen on.
 		Window window = getWindow();
 	    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	    //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 		setContentView(R.layout.main);
 
@@ -110,6 +114,10 @@ public class MainActivity extends Activity {
 		switch(item.getItemId()) {
 		case R.id.item_info:
 			Toast.makeText(this, getResources().getString(R.string.menu_info_text),
+                    Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.item_gallery:
+			Toast.makeText(this, "Not yet implemented",
                     Toast.LENGTH_SHORT).show();
 			return true;
 		default:
