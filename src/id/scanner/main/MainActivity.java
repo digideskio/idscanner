@@ -1,11 +1,16 @@
 package id.scanner.main;
 
+import id.scanner.main.image.ImageActivity;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
@@ -24,10 +29,20 @@ public class MainActivity extends Activity {
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private Camera mCamera;
 	private CameraPreview mPreview;
-
+	private File pictureFile;
+	
+	
 	private PictureCallback mPicture = new PictureCallback() {
 		public void onPictureTaken(byte[] data, Camera camera) {
-			File pictureFile = Utils.getOutputMediaFile();
+			Bitmap bit = BitmapFactory.decodeByteArray(data, 0, data.length);
+			
+			int width = bit.getWidth();
+			int height = bit.getHeight();
+			
+			// Bitmap textImage = Bitmap.createBitmap(bit, 200, 300, 600,100);
+			// bit.recycle();  // sure you want to use this?
+			
+			pictureFile = Utils.getOutputMediaFile();
 			if (pictureFile == null) {
 				Log.d(TAG,"Error creating media file, check storage permission");
 				return;
@@ -35,7 +50,10 @@ public class MainActivity extends Activity {
 
 			try {
 				FileOutputStream fos = new FileOutputStream(pictureFile);
-				fos.write(data);
+				//fos.write(data);
+				//textImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+				bit.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+				
 				fos.close();
 				
 				mCamera.startPreview();
@@ -51,7 +69,6 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		// Keep the screen on.
 		Window window = getWindow();
 	    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	    //requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -61,12 +78,17 @@ public class MainActivity extends Activity {
 
 		// Create an instance of Camera
 		mCamera = Utils.getCameraInstance();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
 
 		// Create our Preview view and set it as the content of our activity.
 		mPreview = new CameraPreview(this, mCamera);
 		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 		preview.addView(mPreview);
-		
+
 		// Add the overlay
 		TextFinderView t = new TextFinderView(this, null);
 		preview.addView(t);
@@ -80,7 +102,7 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
-
+	
 	// release the camera immediately on pause event
 	@Override
     protected void onPause() {
@@ -101,7 +123,6 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    super.onCreateOptionsMenu(menu);
-	    //menu.add(0, MENU_INFO,0, R.string.menu_info);
 	    
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.menu, menu);
@@ -113,12 +134,12 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.item_info:
-			Toast.makeText(this, getResources().getString(R.string.menu_info_text),
-                    Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getResources().getString(R.string.menu_info_text), Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.item_gallery:
-			Toast.makeText(this, "Not yet implemented",
-                    Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(this, ImageActivity.class);
+			intent.putExtra("IMAGE_FILE", this.pictureFile.getAbsolutePath());
+			startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

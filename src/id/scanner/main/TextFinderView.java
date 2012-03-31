@@ -3,7 +3,6 @@ package id.scanner.main;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -11,7 +10,6 @@ public class TextFinderView extends View{
 
 	public TextFinderView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

@@ -6,6 +6,6 @@
     <string name="capture_button">Capture</string>
     <string name="menu_info">Info</string>
     <string name="menu_info_text">Copyright 2012 Petru Isfan</string>
-    <string name="menu_gallery">Gallery</string>
+    <string name="menu_gallery">View Last Picture</string>
     
 </resources>
