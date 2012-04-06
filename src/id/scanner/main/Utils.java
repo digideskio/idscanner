@@ -44,6 +44,7 @@ public class Utils {
 		if (focusMode != null && focusModes.contains(focusMode)) {
 			parameters.setFocusMode(focusMode);
 		}
+		
 		camera.setParameters(parameters);
 	}
 	

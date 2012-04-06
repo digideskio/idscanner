@@ -17,9 +17,14 @@ public class TextFinderView extends View{
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setColor(R.color.background);
 		
-		canvas.drawRect(0,0,1100,200, paint);
-		canvas.drawRect(0,200,300,800, paint);
-		canvas.drawRect(300,300,800,800, paint);
-		canvas.drawRect(800,200,1100,800, paint);
+		// Left corner 
+		canvas.drawRect(0,100,1000,630, paint);
+		canvas.drawRect(600,0,1020,100, paint);
+		
+		// Draw a rectangle in the middle
+//		canvas.drawRect(0,0,1100,200, paint);
+//		canvas.drawRect(0,200,300,800, paint);
+//		canvas.drawRect(300,300,800,800, paint);
+//		canvas.drawRect(800,200,1100,800, paint);
 	}
 }

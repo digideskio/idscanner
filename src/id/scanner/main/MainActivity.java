@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import com.googlecode.tesseract.android.TessBaseAPI;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -31,7 +33,6 @@ public class MainActivity extends Activity {
 	private CameraPreview mPreview;
 	private File pictureFile;
 	
-	
 	private PictureCallback mPicture = new PictureCallback() {
 		public void onPictureTaken(byte[] data, Camera camera) {
 			Bitmap bit = BitmapFactory.decodeByteArray(data, 0, data.length);
@@ -39,8 +40,9 @@ public class MainActivity extends Activity {
 			int width = bit.getWidth();
 			int height = bit.getHeight();
 			
-			// Bitmap textImage = Bitmap.createBitmap(bit, 200, 300, 600,100);
-			// bit.recycle();  // sure you want to use this?
+			Log.d(TAG, "Image width: " + width + " ,height: "+ height);
+			
+			Bitmap textImage = Bitmap.createBitmap(bit, 0, 0 , 188, 32);
 			
 			pictureFile = Utils.getOutputMediaFile();
 			if (pictureFile == null) {
@@ -51,10 +53,23 @@ public class MainActivity extends Activity {
 			try {
 				FileOutputStream fos = new FileOutputStream(pictureFile);
 				//fos.write(data);
-				//textImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-				bit.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+				textImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+				//bit.compress(Bitmap.CompressFormat.JPEG, 100, fos);
 				
 				fos.close();
+				
+				// 
+				// Call mighty teseract!
+				//
+				TessBaseAPI tesseract = new TessBaseAPI();
+				tesseract.init("/mnt/sdcard/tesseract/", "eng");
+				tesseract.setImage(textImage);
+				String text = tesseract.getUTF8Text();
+				tesseract.end();
+
+				// Show what was interpreted.
+				Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
+				Log.d(TAG, "Teseract returned:" + text);
 				
 				mCamera.startPreview();
 			} catch (FileNotFoundException e) {
@@ -105,8 +120,9 @@ public class MainActivity extends Activity {
 	
 	// release the camera immediately on pause event
 	@Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "On destroy called.");
         releaseCamera();              
     }
 
