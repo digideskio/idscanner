@@ -11,11 +11,13 @@ import com.googlecode.tesseract.android.TessBaseAPI;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +34,9 @@ public class MainActivity extends Activity {
 	private Camera mCamera;
 	private CameraPreview mPreview;
 	private File pictureFile;
+
+	private String whitelist = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	
 	
 	private PictureCallback mPicture = new PictureCallback() {
 		public void onPictureTaken(byte[] data, Camera camera) {
@@ -42,7 +47,7 @@ public class MainActivity extends Activity {
 			
 			Log.d(TAG, "Image width: " + width + " ,height: "+ height);
 			
-			Bitmap textImage = Bitmap.createBitmap(bit, 0, 0 , 188, 32);
+			Bitmap textImage = Bitmap.createBitmap(bit, 0, 0 , 155, 39);
 			
 			pictureFile = Utils.getOutputMediaFile();
 			if (pictureFile == null) {
@@ -63,12 +68,19 @@ public class MainActivity extends Activity {
 				//
 				TessBaseAPI tesseract = new TessBaseAPI();
 				tesseract.init("/mnt/sdcard/tesseract/", "eng");
+				//tesseract.setPageSegMode(TessBaseAPI.PSM_SINGLE_LINE);
 				tesseract.setImage(textImage);
+				tesseract.setVariable("tessedit_char_whitelist", whitelist);
+				
 				String text = tesseract.getUTF8Text();
 				tesseract.end();
 
 				// Show what was interpreted.
-				Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
+				if (text != null && text.length()>0) {
+					Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(MainActivity.this, "Y U No see text?", Toast.LENGTH_SHORT).show();
+				}
 				Log.d(TAG, "Teseract returned:" + text);
 				
 				mCamera.startPreview();
@@ -90,7 +102,7 @@ public class MainActivity extends Activity {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 		setContentView(R.layout.main);
-
+		
 		// Create an instance of Camera
 		mCamera = Utils.getCameraInstance();
 	}
@@ -99,6 +111,11 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 
+		try {
+			mCamera.reconnect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		// Create our Preview view and set it as the content of our activity.
 		mPreview = new CameraPreview(this, mCamera);
 		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
@@ -116,6 +133,13 @@ public class MainActivity extends Activity {
 				mCamera.takePicture(null, null, mPicture);
 			}
 		});
+	}
+	
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mCamera.unlock();
 	}
 	
 	// release the camera immediately on pause event

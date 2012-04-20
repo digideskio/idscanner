@@ -18,8 +18,8 @@ public class TextFinderView extends View{
 		paint.setColor(R.color.background);
 		
 		// Left corner 
-		canvas.drawRect(0,100,1000,630, paint);
-		canvas.drawRect(600,0,1020,100, paint);
+		canvas.drawRect(0,100,1030,650, paint);
+		canvas.drawRect(500,0,1030,100, paint);
 		
 		// Draw a rectangle in the middle
 //		canvas.drawRect(0,0,1100,200, paint);
