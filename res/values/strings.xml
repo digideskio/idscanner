@@ -3,9 +3,5 @@
 
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">IDscanner</string>
-    <string name="capture_button">Capture</string>
-    <string name="menu_info">Info</string>
-    <string name="menu_info_text">Copyright 2012 Petru Isfan</string>
-    <string name="menu_gallery">View Last Picture</string>
-    <string name="contentDescription">Last captured image</string>    
+
 </resources>

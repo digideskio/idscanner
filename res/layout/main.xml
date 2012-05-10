@@ -1,22 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-  <FrameLayout
-    android:id="@+id/camera_preview"
-    android:layout_width="0dip"
-    android:layout_height="match_parent"
-    android:layout_weight="1">
-  </FrameLayout>
 
-  <Button
-    android:id="@+id/button_capture"
-    android:text="@string/capture_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    />
-    
-</LinearLayout>
+    <!-- Use this for camera preview -->
+    <id.scanner.app.CameraSurface
+        android:id="@+id/camera_preview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+         />
+
+    <!-- Overlaid to make finding text areas easier -->
+    <id.scanner.app.TextRectanglesView
+        android:id="@+id/text_rectangles_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        />
+
+    <!-- Used for camera button -->
+    <RelativeLayout
+        android:id="@+id/camera_button_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <id.scanner.app.CameraButton
+            android:id="@+id/camera_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dip"
+            android:layout_marginTop="8dip"
+            android:background="@drawable/camera_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:scaleType="center"
+            />
+    </RelativeLayout>
+
+</FrameLayout>
