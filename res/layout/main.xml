@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+    android:layout_height="fill_parent" >
 
     <!-- Use this for camera preview -->
+
     <id.scanner.app.CameraSurface
         android:id="@+id/camera_preview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-         />
+        android:layout_height="fill_parent" />
 
     <!-- Overlaid to make finding text areas easier -->
+
     <id.scanner.app.TextRectanglesView
         android:id="@+id/text_rectangles_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        />
+        android:layout_height="fill_parent" />
 
     <!-- Used for camera button -->
+
     <RelativeLayout
         android:id="@+id/camera_button_view"
         android:layout_width="fill_parent"
@@ -35,8 +35,8 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
-            android:scaleType="center"
-            />
+            android:onClick="onClick"
+            android:scaleType="center" />
     </RelativeLayout>
 
 </FrameLayout>

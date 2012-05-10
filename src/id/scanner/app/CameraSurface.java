@@ -10,7 +10,7 @@ import android.view.SurfaceView;
 
 public class CameraSurface extends SurfaceView implements SurfaceHolder.Callback{
 	private static final String TAG = CameraSurface.class.getSimpleName();
-	private CameraManager mCameraManager = new CameraManager();
+	private CameraManager mCameraManager;
 	private SurfaceHolder mHolder;
 	
 	{
@@ -23,16 +23,19 @@ public class CameraSurface extends SurfaceView implements SurfaceHolder.Callback
 	
 	public CameraSurface(Context context) {
 		super(context);
+		mCameraManager = new CameraManager(context);
 		Log.d(TAG, "Constructor 1");
 	}
 	
 	public CameraSurface(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		mCameraManager = new CameraManager(context);
 		Log.d(TAG, "Constructor 2");
 	}
 
 	public CameraSurface(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		mCameraManager = new CameraManager(context);
 		Log.d(TAG, "Constructor 3");
 	}
 

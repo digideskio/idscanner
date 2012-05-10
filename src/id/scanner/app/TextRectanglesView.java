@@ -3,6 +3,7 @@ package id.scanner.app;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -30,8 +31,9 @@ public class TextRectanglesView extends View {
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setColor(R.color.TextRectaglesForegraund);
 		
-		// Left corner 
-		canvas.drawRect(0,100,1030,650, paint);
-		canvas.drawRect(500,0,1030,100, paint);
+		Point screenResolution = CameraManager.screenResolution;
+//		canvas.drawRect(0,100,1030,650, paint);
+//		canvas.drawRect(500,0,1030,100, paint);
+		canvas.drawRect(10,10,screenResolution.x - 10, screenResolution.y - 10, paint);
 	}
 }
