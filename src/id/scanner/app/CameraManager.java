@@ -95,7 +95,8 @@ public class CameraManager {
 	    screenResolution = new Point();
 	    display.getSize(screenResolution);
 	    
-		cameraResolution = findBestPreviewSizeValue(parameters, false);
+		cameraResolution = findBestPreviewSizeValue(parameters);
+	    // cameraResolution = findMaxPreviewSizeValue(parameters);
 		
 		Log.i(TAG, "Screen resolution: " + screenResolution);
 	    Log.i(TAG, "Camera resolution: " + cameraResolution);
@@ -105,6 +106,20 @@ public class CameraManager {
 		mCamera.setParameters(parameters);
 	}
 
+	private Point findMaxPreviewSizeValue(Parameters parameters) {
+		List<Camera.Size> sizes = parameters.getSupportedPictureSizes();
+		
+		Point result = new Point(0,0);
+		for (Camera.Size s: sizes) {
+			if (s.width>result.x && s.height>result.y) {
+				result.x=s.width;
+				result.y=s.height;
+			}
+		}
+		return result;
+	}
+
+
 	/**
 	 * Find the supported camera size that is optimal for the screen resolution.
 	 * @param parameters
@@ -112,7 +127,7 @@ public class CameraManager {
 	 * @param b
 	 * @return
 	 */
-	private Point findBestPreviewSizeValue(Parameters parameters, boolean b) {
+	private Point findBestPreviewSizeValue(Parameters parameters) {
 		Point bestSize = null;
 		int diff = Integer.MAX_VALUE;
 		
