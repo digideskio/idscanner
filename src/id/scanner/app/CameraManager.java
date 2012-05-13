@@ -14,18 +14,24 @@ import android.view.WindowManager;
 
 public class CameraManager {
 	private static final String TAG = CameraManager.class.getSimpleName();
-	private Camera mCamera;
+	private static Camera mCamera;
 	private boolean previewing = false;
 	private Context context;
 	
 	public static Point screenResolution = null;
-	public static Point cameraResolution = null;
+	public static Point previewSize = new Point(1280, 720);
+	public static Point pictureSize = new Point(2592, 1458);
+	//public static Point pictureSize = new Point(2592, 1944);
 	
 	
 	public CameraManager(Context context) {
 		this.context = context;
 	}
 	
+	
+	public static Camera getCamera() {
+		return mCamera;
+	}
 	
 	public void openCamera(SurfaceHolder holder) throws IOException {
 		if (mCamera == null) {
@@ -58,7 +64,10 @@ public class CameraManager {
 	
 	public void stopPreview() {
 		if (mCamera != null && previewing) {
+			mCamera.setPreviewCallback(null);
 			mCamera.stopPreview();
+			mCamera.release();
+			mCamera = null;
 			previewing = false;
 		}
 	}
@@ -66,28 +75,17 @@ public class CameraManager {
 	private void setCameraParameters() {
 		Camera.Parameters parameters = mCamera.getParameters();
 
-//		List<Camera.Size> sizes = parameters.getSupportedPictureSizes();
-//		Log.d(TAG, "Supported camera sizes:");
-//		for (Camera.Size s: sizes) {
-//			Log.d(TAG, s.width + "x" + s.height);
-//		}
-//		Log.d(TAG,"Current Picture size:" + parameters.getPictureSize().height);
-		
 		if (parameters == null) {
 			Log.w(TAG, "Device error: no camera parameters are available. Proceeding without configuration.");
 			return;
 		}
-		//
-		// Lets see if we can set focus mode continuous picture
-		//
+
 		String focusMode = Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE;
 		List<String> focusModes = parameters.getSupportedFocusModes();
 		
 		if (focusMode != null && focusModes.contains(focusMode)) {
 			parameters.setFocusMode(focusMode);
 		}
-		//parameters.setPictureSize(1280, 960);
-		
 		
 		WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 	    Display display = manager.getDefaultDisplay();
@@ -95,30 +93,18 @@ public class CameraManager {
 	    screenResolution = new Point();
 	    display.getSize(screenResolution);
 	    
-		cameraResolution = findBestPreviewSizeValue(parameters);
-	    // cameraResolution = findMaxPreviewSizeValue(parameters);
+	    previewSize = findBestPreviewSizeValue(parameters);  		//1196x720
 		
 		Log.i(TAG, "Screen resolution: " + screenResolution);
-	    Log.i(TAG, "Camera resolution: " + cameraResolution);
+	    Log.i(TAG, "Preview size: " + previewSize);
+	    Log.i(TAG, "Picture size: " + pictureSize);
 	    
-		parameters.setPreviewSize(cameraResolution.x, cameraResolution.y);
+	    // Picture size and screen preview size should be the same.
+		parameters.setPreviewSize(previewSize.x, previewSize.y);  
+		parameters.setPictureSize(pictureSize.x, pictureSize.y);
 		
 		mCamera.setParameters(parameters);
 	}
-
-	private Point findMaxPreviewSizeValue(Parameters parameters) {
-		List<Camera.Size> sizes = parameters.getSupportedPictureSizes();
-		
-		Point result = new Point(0,0);
-		for (Camera.Size s: sizes) {
-			if (s.width>result.x && s.height>result.y) {
-				result.x=s.width;
-				result.y=s.height;
-			}
-		}
-		return result;
-	}
-
 
 	/**
 	 * Find the supported camera size that is optimal for the screen resolution.

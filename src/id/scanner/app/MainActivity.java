@@ -1,6 +1,7 @@
 package id.scanner.app;
 
 import android.app.Activity;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -41,8 +42,14 @@ public class MainActivity extends Activity {
     	Log.d(TAG, "onPause()");
     }
     
-    
     public void onClick(View v) {
+    	Camera camera = CameraManager.getCamera();
+    	PictureManager pictureManager = new PictureManager(getApplication());
+    	
+    	camera.takePicture(null, null, pictureManager);
+    	
+    	camera.startPreview();
+    	
 		Toast.makeText(this, "IDscanner 2012 Petru Isfan", Toast.LENGTH_SHORT).show();
 	}
     

@@ -23,8 +23,4 @@ public class CameraButton extends ImageView {
 		super(context, attrs, defStyle);
 		this.context = context;
 	}
-	
-	public void onClick(View v) {
-		Toast.makeText(context, "IDscanner 2012 Petru Isfan", Toast.LENGTH_SHORT).show();
-	}
 }
