@@ -47,7 +47,6 @@ public class CameraSurface extends SurfaceView implements SurfaceHolder.Callback
 			mCameraManager.openCamera(holder);
 			mCameraManager.startPreview();
 		} catch (IOException e) {
-			//e.printStackTrace();
 			Log.d(TAG, "Unable to init camera");
 		}
 	}

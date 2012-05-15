@@ -21,7 +21,6 @@ public class CameraManager {
 	public static Point screenResolution = null;
 	public static Point previewSize = new Point(1280, 720);
 	public static Point pictureSize = new Point(2592, 1458);
-	//public static Point pictureSize = new Point(2592, 1944);
 	
 	
 	public CameraManager(Context context) {
