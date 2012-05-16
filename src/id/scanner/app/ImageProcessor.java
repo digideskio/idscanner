@@ -69,7 +69,9 @@ public class ImageProcessor {
 		if (left>0 && top>0 && right<width && bottom<height &&  left<right && top<bottom) {
 			Bitmap document = Bitmap.createBitmap(mImage, left, top, (right - left), (bottom - top));
 			return extractName(document);
-		} 
+		}  else {
+			Log.d(TAG, "Problems encountered while trying to determine document margins.");
+		}
 		return null;
 	}
 	
@@ -100,6 +102,8 @@ public class ImageProcessor {
 			Util.writeToDisk(result, "ocrZone");
 			
 			return result;
+		} else {
+			Log.d(TAG, "Problems encountered while trying to determine the image that will be processed.");
 		}
 		return null;
 	}

@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
     	
     	camera.startPreview();
     	
-		Toast.makeText(this, "IDscanner 2012 Petru Isfan", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "IDscanner 2012 Petru Isfan", Toast.LENGTH_SHORT).show();
 	}
     
     /////////////////////   The menu   ////////////////////////////////////////
