@@ -24,7 +24,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <id.scanner.app.CameraButton
+        <ImageButton
             android:id="@+id/camera_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,8 +35,44 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
-            android:onClick="onClick"
-            android:scaleType="center" />
+            android:onClick="onClickCamera"
+            android:scaleType="center" 
+            
+            android:contentDescription="Camera Button"/>
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/result_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/result_view_background"
+        android:orientation="vertical"
+        android:padding="4dip"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OCR results:" />
+
+        <TextView
+            android:id="@+id/result_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/confidence_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+        <Button 
+            android:id="@+id/result_button_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:clickable="true"
+            android:text="  OK  "
+            android:onClick="onClickOk"/>
+    </LinearLayout>
 
 </FrameLayout>

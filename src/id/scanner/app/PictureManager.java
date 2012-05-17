@@ -16,10 +16,16 @@ public class PictureManager implements PictureCallback{
 	private static final String TAG = PictureManager.class.getSimpleName();
 
 	private Context mContext;
+	private MainActivity activity;
 	
 	
 	public PictureManager(Context application) {
 		mContext = application;
+	}
+	
+	public PictureManager(Context application, MainActivity mainActivity) {
+		mContext = application;
+		this.activity = mainActivity;
 	}
 	
 	
@@ -50,15 +56,17 @@ public class PictureManager implements PictureCallback{
 			String text = tess.getText();
 			int confidence = tess.getConfidence();
 			
+			
+			
 			// Show what was interpreted.
 			if (text != null && text.length()>0) {
-				Toast.makeText(mContext, text + "\n\nConfidence: " + confidence, Toast.LENGTH_LONG).show();
+				activity.showResults(text, confidence);
 			} else {
-				Toast.makeText(mContext, "Y U No see text?", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, "No text detected!", Toast.LENGTH_SHORT).show();
 			}
 			Log.d(TAG, "Teseract returned:" + text);
 		} else {
-			Toast.makeText(mContext, "ERROR", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No document was identified in the picture", Toast.LENGTH_SHORT).show();
 		}
 	}
 }

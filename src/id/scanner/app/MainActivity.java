@@ -4,16 +4,15 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 
 public class MainActivity extends Activity {
 	private static final String TAG = MainActivity.class.getSimpleName();
-	private static final int ABOUT_ID = 0;
 	
 	
     /** Called when the activity is first created. */
@@ -28,6 +27,8 @@ public class MainActivity extends Activity {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
         setContentView(R.layout.main);
+        
+        
     }
     
     @Override
@@ -42,35 +43,30 @@ public class MainActivity extends Activity {
     	Log.d(TAG, "onPause()");
     }
     
-    public void onClick(View v) {
+    public void onClickCamera(View v) {
     	Camera camera = CameraManager.getCamera();
-    	PictureManager pictureManager = new PictureManager(getApplication());
+    	PictureManager pictureManager = new PictureManager(getApplication(), this);
     	
     	camera.takePicture(null, null, pictureManager);
     	
     	camera.startPreview();
-    	
-		//Toast.makeText(this, "IDscanner 2012 Petru Isfan", Toast.LENGTH_SHORT).show();
+	}
+
+	public void showResults(String text, int c) {
+		LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
+		resultView.setVisibility(View.VISIBLE);
+		
+		TextView result = (TextView) findViewById(R.id.result_text);
+		result.setText(text);
+		
+		TextView confidence = (TextView) findViewById(R.id.confidence_text);
+		confidence.setText("Confidence: " + c);
+		
 	}
     
-    /////////////////////   The menu   ////////////////////////////////////////
-    //// Does not work!!!
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-    	super.onCreateOptionsMenu(menu);
-    	menu.add(0, ABOUT_ID, 0, "About").setIcon(android.R.drawable.ic_menu_preferences);
-
-    	return true;
-    }
+	public void onClickOk(View v) {
+		LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
+		resultView.setVisibility(View.GONE);
+	}
     
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	switch (item.getItemId()) {
-    	case ABOUT_ID: 
-    		Toast.makeText(this, "IDscanner 2012 Petru Isfan", Toast.LENGTH_SHORT).show();
-			return true;
-    	}
-    	return super.onOptionsItemSelected(item);
-    }
 }
