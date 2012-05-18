@@ -1,5 +1,7 @@
 package id.scanner.app;
 
+import id.scanner.app.core.ProfileManager;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -19,12 +21,17 @@ public class CameraManager {
 	private Context context;
 	
 	public static Point screenResolution = null;
-	public static Point previewSize = new Point(1280, 720);
-	public static Point pictureSize = new Point(2592, 1458);
+	public static Point previewSize;
+	public static Point pictureSize;
 	
 	
 	public CameraManager(Context context) {
 		this.context = context;
+		
+		ProfileManager pm = ProfileManager.getInstance();
+		
+		previewSize = new Point(pm.getPreviewSize());
+		pictureSize = new Point(pm.getPictureSize());
 	}
 	
 	

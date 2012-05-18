@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 
@@ -14,38 +15,37 @@ import android.view.View;
  * @author petru
  *
  */
-public class TextRectanglesView extends View {
-	
-	public TextRectanglesView(Context context) {
+public class RectanglesView extends View {
+	private static final String TAG = RectanglesView.class.getSimpleName();
+
+
+	public RectanglesView(Context context) {
 		super(context);
 	}
 	
-	public TextRectanglesView(Context context, AttributeSet attrs) {
+	public RectanglesView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 	
-	public TextRectanglesView(Context context, AttributeSet attrs, int defStyle) {
+	public RectanglesView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
 
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
-		this.drawRectangles(canvas);
-	}
-
-	private void drawRectangles(Canvas canvas) {
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setColor(Color.WHITE);
 		paint.setStyle(Style.STROKE);
 		paint.setStrokeWidth(3);
-		
-		//Point screenResolution = CameraManager.screenResolution;
 		
 		int[][] rectangles = {{152, 45, 1044, 675}};
 		
 		for (int i=0; i<rectangles.length; i++) {
 			canvas.drawRect(rectangles[i][0], rectangles[i][1], rectangles[i][2], rectangles[i][3], paint);
 		}
+		
+		Log.d(TAG, "Rectangles view created");
 	}
+
 }

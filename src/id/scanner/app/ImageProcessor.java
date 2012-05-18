@@ -68,6 +68,9 @@ public class ImageProcessor {
 
 		if (left>0 && top>0 && right<width && bottom<height &&  left<right && top<bottom) {
 			Bitmap document = Bitmap.createBitmap(mImage, left, top, (right - left), (bottom - top));
+			
+			extractPicture(document);
+			
 			return extractName(document);
 		}  else {
 			Log.d(TAG, "Problems encountered while trying to determine document margins.");
@@ -107,7 +110,30 @@ public class ImageProcessor {
 		}
 		return null;
 	}
-	
+
+	private int pictureStartX=3, pictureStartY=8;
+	private int pictureWidth=29 , pictureHeight=34;
+
+	private void extractPicture(Bitmap image) {
+		float width = image.getWidth();
+		int height = image.getHeight();
+
+		float pixel = width/idWidth;
+
+		int left = (int) (pictureStartX * pixel);
+		int top = (int) (pictureStartY * pixel);
+		int w = (int) (pictureWidth * pixel);
+		int h = (int) (pictureHeight * pixel);
+
+		if (left>0 && top>0 && (w+left)<width && (h+top)<height ) {
+			Bitmap result = Bitmap.createBitmap(image, left, top, w, h);
+			Util.writeToDisk(result, "Image");
+		} else {
+			Log.d(TAG, "Problems encountered while trying to determine the image that will be processed.");
+		}
+	}
+
+
 	/**
 	 * 
 	 * @param pixel	pixel value in ARGB

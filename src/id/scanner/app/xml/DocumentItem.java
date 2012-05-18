@@ -26,6 +26,30 @@ public class DocumentItem {
 		this.type = DataType.valueOf(type.toUpperCase());
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public String getType() {
+		return type.toString();
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public int getW() {
+		return w;
+	}
+
+	public int getH() {
+		return h;
+	}
+
 	// overwriten for printing to logs.
 	@Override
 	public String toString() {

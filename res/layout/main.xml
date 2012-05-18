@@ -12,7 +12,7 @@
 
     <!-- Overlaid to make finding text areas easier -->
 
-    <id.scanner.app.TextRectanglesView
+    <id.scanner.app.RectanglesView
         android:id="@+id/text_rectangles_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />

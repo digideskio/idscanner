@@ -13,32 +13,33 @@ public class CameraSurface extends SurfaceView implements SurfaceHolder.Callback
 	private CameraManager mCameraManager;
 	private SurfaceHolder mHolder;
 	
-	{
-		mHolder = getHolder();
-		mHolder.addCallback(this);
-        // deprecated setting, but required on Android versions prior to 3.0
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-	}
-	
 	
 	public CameraSurface(Context context) {
 		super(context);
-		mCameraManager = new CameraManager(context);
-		Log.d(TAG, "Constructor 1");
+		initialize(context);
 	}
 	
 	public CameraSurface(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		mCameraManager = new CameraManager(context);
-		Log.d(TAG, "Constructor 2");
+		initialize(context);
 	}
 
 	public CameraSurface(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		mCameraManager = new CameraManager(context);
-		Log.d(TAG, "Constructor 3");
+		initialize(context);
 	}
 
+	
+	private void initialize(Context context){
+		mHolder = getHolder();
+		mHolder.addCallback(this);
+        // deprecated setting, but required on Android versions prior to 3.0
+        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        
+        mCameraManager = new CameraManager(context);
+        
+		Log.d(TAG, "Camera Surface initialized");
+	}
 	
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
