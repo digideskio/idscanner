@@ -30,7 +30,7 @@ public class CameraManager {
 		
 		ProfileManager pm = ProfileManager.getInstance();
 		
-		previewSize = new Point(pm.getPreviewSize());
+		previewSize = new Point(pm.getPreviewSize()); 		// TODO: not sure I need this.
 		pictureSize = new Point(pm.getPictureSize());
 	}
 	

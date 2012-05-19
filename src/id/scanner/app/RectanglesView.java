@@ -1,5 +1,6 @@
 package id.scanner.app;
 
+import id.scanner.app.core.ProfileManager;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -39,7 +40,9 @@ public class RectanglesView extends View {
 		paint.setStyle(Style.STROKE);
 		paint.setStrokeWidth(3);
 		
-		int[][] rectangles = {{152, 45, 1044, 675}};
+		// int[][] rectangles = {{152, 45, 1044, 675}};
+		ProfileManager pm = ProfileManager.getInstance();
+		int[][] rectangles = pm.getDispalys();
 		
 		for (int i=0; i<rectangles.length; i++) {
 			canvas.drawRect(rectangles[i][0], rectangles[i][1], rectangles[i][2], rectangles[i][3], paint);

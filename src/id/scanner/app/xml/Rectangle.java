@@ -49,4 +49,9 @@ public class Rectangle {
 		}
 		return false;
 	}
+
+	public int[] getArray() {
+		int[] result = {a, b, c, d};
+		return result;
+	}
 }

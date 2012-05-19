@@ -1,8 +1,11 @@
 package id.scanner.app.core;
 
+import java.util.ArrayList;
+
 import android.graphics.Point;
 import id.scanner.app.MainActivity;
 import id.scanner.app.xml.Profile;
+import id.scanner.app.xml.Rectangle;
 import id.scanner.app.xml.XMLparser;
 
 public class ProfileManager {
@@ -36,5 +39,17 @@ public class ProfileManager {
 		int x = profile.getPictureSizeX();
 		int y = profile.getPictureSizeY();
 		return new Point(x,y);
+	}
+
+		// TODO Auto-generated method stub
+	public int[][] getDispalys() {
+		ArrayList<Rectangle> rectangles = profile.getDisplayObjects();
+		int size = rectangles.size();
+		int[][] result = new int[size ][4];
+		
+		for (int i=0; i<size; i++) {
+			result[i]=rectangles.get(i).getArray();
+		}
+		return result;
 	}
 }

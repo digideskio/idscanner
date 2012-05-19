@@ -4,27 +4,19 @@ import id.scanner.app.ocr.Tesseract;
 
 import java.io.File;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.util.Log;
-import android.widget.Toast;
 
 public class PictureManager implements PictureCallback{
 	private static final String TAG = PictureManager.class.getSimpleName();
 
-	private Context mContext;
 	private MainActivity activity;
+
 	
-	
-	public PictureManager(Context application) {
-		mContext = application;
-	}
-	
-	public PictureManager(Context application, MainActivity mainActivity) {
-		mContext = application;
+	public PictureManager(MainActivity mainActivity) {
 		this.activity = mainActivity;
 	}
 	
@@ -48,25 +40,21 @@ public class PictureManager implements PictureCallback{
 
 		ImageProcessor processor = new ImageProcessor(image);
 		Bitmap ocrZone = processor.getOcrZone();
-			
+		String text = null;
+		int confidence = 0;
+		
 		if (ocrZone != null) {
 			Tesseract tess = new Tesseract(ocrZone);
 			tess.runOcr();
 			
-			String text = tess.getText();
-			int confidence = tess.getConfidence();
+			text = tess.getText();
+			confidence = tess.getConfidence();
 			
-			
-			
-			// Show what was interpreted.
-			if (text != null && text.length()>0) {
-				activity.showResults(text, confidence);
-			} else {
-				Toast.makeText(mContext, "No text detected!", Toast.LENGTH_SHORT).show();
-			}
-			Log.d(TAG, "Teseract returned:" + text);
+			Log.d(TAG, "Teseract returned: " + text);
 		} else {
-			Toast.makeText(mContext, "No document was identified in the picture", Toast.LENGTH_SHORT).show();
+			confidence = -1; 	// hack for not finding any documents.
 		}
+		
+		activity.showResults(text, confidence);
 	}
 }
