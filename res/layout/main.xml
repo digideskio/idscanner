@@ -41,14 +41,20 @@
             android:contentDescription="Camera Button"/>
     </RelativeLayout>
 
+    <ScrollView
+        android:id="@+id/scroll_view" 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone">
+        
     <LinearLayout
         android:id="@+id/result_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:background="@color/result_view_background"
         android:orientation="vertical"
         android:padding="4dip"
-        android:visibility="gone" >
+         >
 
         <TextView
             android:id="@+id/title"
@@ -56,11 +62,6 @@
             android:layout_height="wrap_content"
             android:text="OCR results:" />
 
-        <TextView
-            android:id="@+id/result_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        
         <Button 
             android:id="@+id/result_button_ok"
             android:layout_width="wrap_content"
@@ -69,5 +70,5 @@
             android:text="  OK  "
             android:onClick="onClickOk"/>
     </LinearLayout>
-
+    </ScrollView>
 </FrameLayout>

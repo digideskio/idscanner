@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import id.scanner.app.core.ProfileManager;
 import id.scanner.app.database.DatabaseAdapter;
+import id.scanner.app.ocr.TextDecoder;
 import id.scanner.app.xml.Profile;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.hardware.Camera;
@@ -15,7 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +27,10 @@ public class MainActivity extends Activity {
 	private static final String TAG = MainActivity.class.getSimpleName();
 	// not sure using this is a good idea.
 	private static ContextWrapper application;
-	private ProgressDialog progressDialog;
+	private TransparentProgressDialog progressDialog;
+	private boolean runningProgressDialog = false;
+	
+	private static int counter = 0;
 	
 	
     /** Called when the activity is first created. */
@@ -37,7 +43,7 @@ public class MainActivity extends Activity {
         
 		Window window = getWindow();
 	    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        
+	    
         setContentView(R.layout.main);
         
         initializeApplication();
@@ -87,7 +93,10 @@ public class MainActivity extends Activity {
     	
     	camera.startPreview();
     	
-    	progressDialog = ProgressDialog.show(this, "Processing Image", "Please wait", true, true);
+    	if ( ! runningProgressDialog) {
+    		progressDialog = TransparentProgressDialog.show(this, "Processing Image", "Please wait", true, true);
+    		runningProgressDialog = true;
+    	}
 	}
 
 	public void showResults(String text, int c) {
@@ -95,20 +104,29 @@ public class MainActivity extends Activity {
 		
 		if (text != null && c > 70 ) {
 			progressDialog.dismiss();
+			runningProgressDialog = false;
 			toast.cancel();
 			
-			LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
-			resultView.setVisibility(View.VISIBLE);
+			ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
+			scrollView.setVisibility(View.VISIBLE);
 
-			TextView result = (TextView) findViewById(R.id.result_text);
-			result.setText(text);
+			LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
+
+			TextView tesseractText= new TextView(getApplication());
+			tesseractText.setText(text);
+			resultView.addView(tesseractText);
+			
+			ArrayList<String> results = TextDecoder.getDecodedTect(text);
+			
+			for (int i=0; i<results.size()-1; i=i+2 ) {
+				resultView.addView(addLinearLayout(results.get(i), results.get(i+1)));
+			}
 
 			TextView confidence = new TextView(getApplication());
 			confidence.setText("Confidence: " + c);
-
 			resultView.addView(confidence);
 			
-			return; // done here.
+			return;
 		} else if ( c == -1 ) {		// hack for not finding any documents
 			toast = Toast.makeText(this, "No document was identified in the picture", Toast.LENGTH_SHORT);
 		} else {					// tesseract could not interpret image
@@ -117,15 +135,40 @@ public class MainActivity extends Activity {
 		// need to take another picture.
 		toast.show();
 
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		
-		onClickCamera(null);	// do we really need any view?
+		if (counter < 15) {
+			counter++;
+			Log.d(TAG, "Rescanning.");
+			onClickCamera(null);	
+		} else {
+			counter = 0;
+			progressDialog.dismiss();
+			runningProgressDialog = false;
+		}
 	}
     
+	private View addLinearLayout(String label, String text) {
+		LinearLayout result = new LinearLayout(getApplicationContext());
+		result.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		result.setOrientation(LinearLayout.HORIZONTAL);
+		
+		TextView type = new TextView(getApplication());
+		type.setText(label);
+		
+		EditText value = new EditText(getApplication());
+		value.setText(text);
+		
+		result.addView(type);
+		result.addView(value);
+		
+		return result;
+	}
+
 	public void onClickOk(View v) {
 		LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
 		resultView.setVisibility(View.GONE);
