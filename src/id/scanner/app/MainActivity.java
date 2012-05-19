@@ -170,8 +170,13 @@ public class MainActivity extends Activity {
 	}
 
 	public void onClickOk(View v) {
-		LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
-		resultView.setVisibility(View.GONE);
+		ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
+		scrollView.setVisibility(View.GONE);
+	}
+	
+	public void onClickCancel(View v) {
+		ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
+		scrollView.setVisibility(View.GONE);
 	}
 
 	public static Resources getApplicationResources() {

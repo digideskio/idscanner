@@ -24,51 +24,71 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
+        <!--android:layout_marginRight="8dip"
+            android:layout_marginTop="8dip"-->
         <ImageButton
             android:id="@+id/camera_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="8dip"
-            android:layout_marginTop="8dip"
             android:background="@drawable/camera_button"
             android:clickable="true"
+            android:contentDescription="Camera Button"
             android:focusable="true"
             android:gravity="center_vertical"
             android:onClick="onClickCamera"
-            android:scaleType="center" 
-            
-            android:contentDescription="Camera Button"/>
+            android:scaleType="center" />
     </RelativeLayout>
 
     <ScrollView
-        android:id="@+id/scroll_view" 
+        android:id="@+id/scroll_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="gone">
-        
-    <LinearLayout
-        android:id="@+id/result_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/result_view_background"
-        android:orientation="vertical"
-        android:padding="4dip"
-         >
+        android:visibility="gone" >
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="OCR results:" />
+            android:orientation="vertical" 
+            android:background="@color/result_view_background"
+            android:padding="4dip">
 
-        <Button 
-            android:id="@+id/result_button_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:clickable="true"
-            android:text="  OK  "
-            android:onClick="onClickOk"/>
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/result_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="4dip" >
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OCR results:" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/result_button_cancel"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:onClick="onClickCancel"
+                    android:text="Cancel" />
+
+                <Button
+                    android:id="@+id/result_button_ok"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:onClick="onClickOk"
+                    android:text="OK" />
+            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
+
 </FrameLayout>

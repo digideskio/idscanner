@@ -5,17 +5,17 @@ import java.util.ArrayList;
 public class TextDecoder {
  
 	static String[] fields = {
-			"Tip",
-			"Cod Tara",
-			"Nume",
-			"Prenume",
-			"Seria",
-			"Numarul",
-			"Cetatenia",
-			"Data Nasterii",
-			"Sexul",
-			"Valabilitate",
-			"CNP"
+			"Tip:",
+			"Cod Tara:",
+			"Nume:",
+			"Prenume:",
+			"Seria:",
+			"Numarul:",
+			"Cetatenia:",
+			"Data Nasterii:",
+			"Sexul:",
+			"Valabilitate:",
+			"CNP:"
 	};
 	
 	public static ArrayList<String> getDecodedTect(String text) {
