@@ -1,5 +1,7 @@
 package id.scanner.app.xml;
 
+import id.scanner.app.core.Profile;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -11,7 +13,6 @@ public class DataHandler extends DefaultHandler {
 	
 	private boolean _inProfile = false;
 	private boolean _inName = false;
-	private boolean _inPreviewSize = false;
 	private boolean _inPictureSize = false;
 	private boolean _inDocumentSize = false;
 	private boolean _inDisplay= false;
@@ -46,9 +47,6 @@ public class DataHandler extends DefaultHandler {
 		} else if (_inProfile) {
 			if (localName.equalsIgnoreCase("NAME")) {
 				_inName=true;
-			} 
-			else if (localName.equalsIgnoreCase("PREVIEWSIZE")) {
-				_inPreviewSize = true;
 			} 
 			else if (localName.equalsIgnoreCase("PICTURESIZE")) {
 				_inPictureSize = true;
@@ -116,9 +114,6 @@ public class DataHandler extends DefaultHandler {
 			if (localName.equalsIgnoreCase("NAME")) {
 				_inName = false;
 			} 
-			else if (localName.equalsIgnoreCase("PREVIEWSIZE")) {
-				_inPreviewSize = false;
-			} 
 			else if (localName.equalsIgnoreCase("PICTURESIZE")) {
 				_inPictureSize = false;
 			} 
@@ -166,13 +161,6 @@ public class DataHandler extends DefaultHandler {
 	    	if (_inName) {
 	    		profile.setName(chars);
 	    	}
-	    	else if (_inPreviewSize) {
-	    		try {
-	    			profile.setPreviewSize(chars);
-	    		} catch (Exception e) {
-	    			Log.d(TAG, "Preview size incorectly specified in xml.");
-	    		}
-	    	} 
 	    	else if (_inPictureSize) {
 	    		try {
 	    			profile.setPictureSize(chars);

@@ -1,6 +1,6 @@
 package id.scanner.app.database;
 
-import id.scanner.app.xml.Profile;
+import id.scanner.app.core.Profile;
 
 import java.util.ArrayList;
 

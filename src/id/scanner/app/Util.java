@@ -38,6 +38,31 @@ public class Util {
 	}
 	
 	/**
+	 * Write a bitmap to disk with a unique filename.
+	 * @param image	the bitmap to write.
+	 * @param name	the name of the file.
+	 */
+	public static String writeImageWithTimestamp(Bitmap image) {
+		File pictureFile = getUniqueImageFile();
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(pictureFile);
+			
+			image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+			
+			fos.close();
+			
+			return pictureFile.getAbsolutePath();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Create a File for saving an image
 	 * @return	A file with timestamp and jpg extension.
 	 */
@@ -51,6 +76,7 @@ public class Util {
 
 	    return mediaFile;
 	}
+	
 	
 	private static String getMediaStorageDir() {
 		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), DIR_NAME);

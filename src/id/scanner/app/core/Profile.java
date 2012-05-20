@@ -1,10 +1,12 @@
-package id.scanner.app.xml;
+package id.scanner.app.core;
+
+import id.scanner.app.xml.DocumentItem;
+import id.scanner.app.xml.Rectangle;
 
 import java.util.ArrayList;
 
 public class Profile {
 	private String name;
-	private int previewSizeX, previewSizeY;
 	private int pictureSizeX, pictureSizeY;
 	private int documentSizeX, documentSizeY;
 	
@@ -20,17 +22,6 @@ public class Profile {
 	
 	public void setName(String name) {
 		this.name = name.toUpperCase();
-	}
-	
-	public void setPreviewSize(String size) {
-		String[] aux = size.split("x");
-		
-		if (aux.length == 2) {
-			this.previewSizeX = Integer.valueOf(aux[0]);
-			this.previewSizeY = Integer.valueOf(aux[1]);
-		} else {
-			throw new IllegalArgumentException();
-		}
 	}
 	
 	public void setPictureSize(String size) {
@@ -67,14 +58,6 @@ public class Profile {
 		return name;
 	}
 
-	public int getPreviewSizeX() {
-		return previewSizeX;
-	}
-
-	public int getPreviewSizeY() {
-		return previewSizeY;
-	}
-
 	public int getPictureSizeX() {
 		return pictureSizeX;
 	}
@@ -103,7 +86,6 @@ public class Profile {
 	@Override
 	public String toString() {
 		String result = "Profile name: " + name;
-		result+="\nPreview size: " + previewSizeX + "x" + previewSizeY;
 		result+="\nPicture size: " + pictureSizeX + "x" + pictureSizeY;
 		result+="\nDocument size: " + documentSizeX + "x" + documentSizeY;
 		
@@ -126,9 +108,7 @@ public class Profile {
 					prof.documentSizeX == this.documentSizeX &&
 					prof.documentSizeY == this.documentSizeY &&
 					prof.pictureSizeX == this.pictureSizeX &&
-					prof.pictureSizeY == this.pictureSizeY &&
-					prof.previewSizeX == this.previewSizeX &&
-					prof.previewSizeY == this.previewSizeY) {
+					prof.pictureSizeY == this.pictureSizeY) {
 				
 				for (int i=0; i<displayObjects.size(); i++) {
 					Rectangle r1 = prof.displayObjects.get(i);

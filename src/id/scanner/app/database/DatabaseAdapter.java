@@ -2,7 +2,8 @@ package id.scanner.app.database;
 
 import java.util.ArrayList;
 
-import id.scanner.app.xml.Profile;
+import id.scanner.app.core.IDdata;
+import id.scanner.app.core.Profile;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,9 +15,11 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
 	private static final String TAG = DatabaseAdapter.class.getSimpleName();
 	
 	private static final String DATABASE_NAME = "IDscanner";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 4;
 	
-	ArrayList<TableInterface> tables = new ArrayList<TableInterface>();
+	ArrayList<TableInterface> profileTables = new ArrayList<TableInterface>();
+	private DataTable dataTable;
+	
 	private SQLiteDatabase database;
 
 	
@@ -29,22 +32,24 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
 	 * Opens (and create/update) the IDscanner database.
 	 */
 	public void open() {
-		tables.add( new ProfileTable());
-		tables.add( new ItemTable());
-		tables.add( new RectangleTable());
+		profileTables.add( new ProfileTable());
+		profileTables.add( new ItemTable());
+		profileTables.add( new RectangleTable());
+		
+		dataTable = new DataTable();
 		
 		database = getWritableDatabase();
 	}
 	
 	/**
 	 * Insert the content of profile to the database.
-	 * @param p
+	 * @param p	The profile to insert.
 	 */
 	public boolean insertProfile(Profile p){
 		try {
 			ArrayList<ContentValues> values;
 			
-			for (TableInterface table: tables) {
+			for (TableInterface table: profileTables) {
 				values = table.insert(p);
 				
 				for (ContentValues v: values) {
@@ -64,24 +69,33 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
 	public void onCreate(SQLiteDatabase db) {
 		Log.d(TAG, "Creating database. ");
 		
-		for (TableInterface table: tables) {
+		for (TableInterface table: profileTables) {
 			Log.d(TAG, table.createTable());
 			db.execSQL(table.createTable());
 		}
+		
+		Log.d(TAG, dataTable.createTable());
+		db.execSQL(dataTable.createTable());
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.d(TAG, "Upgrading (dropping) database. ");
 		
-		for (TableInterface table: tables) {
+		for (TableInterface table: profileTables) {
 			Log.d(TAG, table.dropTable());
 			db.execSQL(table.dropTable());
 		}
+		
+		Log.d(TAG, dataTable.dropTable());
+		db.execSQL(dataTable.dropTable());
+		
 		onCreate(db);
 	}
 
-
+	/**
+	 * @return	A list with the profile names from the database.
+	 */
 	public ArrayList<String> getProfileList() {
 		ArrayList<String> result = new ArrayList<String>();
 		
@@ -104,6 +118,14 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         }
         
         return result;
+	}
+
+
+	public void insertData(IDdata data) {
+		ContentValues values = dataTable.insert(data);
+		database.insert(dataTable.getTableName(), null, values);
+		
+		Log.d(TAG, "Inserted data: " + data);
 	}
 	
 }

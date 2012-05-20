@@ -3,7 +3,6 @@
     <profile>
         <name>CI</name>
         <!-- values in pixels -->
-        <previewSize>800x480</previewSize>
         <pictureSize>2592x1458</pictureSize>
 
         <!-- depends on resolution: 1196x720 -->

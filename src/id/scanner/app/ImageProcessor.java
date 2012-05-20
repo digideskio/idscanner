@@ -1,5 +1,6 @@
 package id.scanner.app;
 
+import id.scanner.app.core.ProfileManager;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -8,7 +9,8 @@ public class ImageProcessor {
 	
 	private static final int BLACK = 40;
 	private Bitmap mImage;
-
+	private String imageFile;
+	
 	
 	public ImageProcessor(Bitmap image) {
 		this.mImage = image;
@@ -71,30 +73,37 @@ public class ImageProcessor {
 			
 			extractPicture(document);
 			
-			return extractName(document);
+			return extractOCRzone(document);
 		}  else {
 			Log.d(TAG, "Problems encountered while trying to determine document margins.");
 		}
 		return null;
 	}
 	
-	private int idWidth=105;
-	private int ocrZoneWidth=95, ocrZoneHeight=13;
-	private int ocrZoneStartX=6, ocrZoneStartY=50;
-	
-	private Bitmap extractName(Bitmap image) {
+	private Bitmap extractOCRzone(Bitmap image) {
+		ProfileManager profileManager = ProfileManager.getInstance();
+		int[] idSize = profileManager.getDocumentSize();
+		
 		// this is float for precision when calculating pixel.
 		float width = image.getWidth();
 		int height = image.getHeight();
 
+		
+		
 		Log.d(TAG, "Ocr zone width: " + width + " height: " + height);
 		
-		float pixel = width/idWidth;
+		float pixel = width/idSize[0];
 		
-		int left = (int) (ocrZoneStartX * pixel);
-		int top = (int) (ocrZoneStartY * pixel);
-		int w = (int) (ocrZoneWidth * pixel); 
-		int h = (int) (ocrZoneHeight * pixel);
+		int[] ocrZone = profileManager.getDocumentItemCoordinates("OCRzone");
+		
+		if (ocrZone == null) {
+			return null;
+		}
+		
+		int left = (int) (ocrZone[0]* pixel);
+		int top = (int) (ocrZone[1] * pixel);
+		int w = (int) (ocrZone[2] * pixel); 
+		int h = (int) (ocrZone[3] * pixel);
 
 		Log.d(TAG, "Pixel: " + pixel);
 		Log.d(TAG, "left: " + left + " top: " + top);
@@ -102,8 +111,6 @@ public class ImageProcessor {
 		
 		if (left>0 && top>0 && (w+left)<width && (h+top)<height ) {
 			Bitmap result = Bitmap.createBitmap(image, left, top, w, h);
-			Util.writeToDisk(result, "ocrZone");
-			
 			return result;
 		} else {
 			Log.d(TAG, "Problems encountered while trying to determine the image that will be processed.");
@@ -111,28 +118,32 @@ public class ImageProcessor {
 		return null;
 	}
 
-	private int pictureStartX=3, pictureStartY=8;
-	private int pictureWidth=29 , pictureHeight=34;
-
 	private void extractPicture(Bitmap image) {
+		ProfileManager profileManager = ProfileManager.getInstance();
+		int[] idSize = profileManager.getDocumentSize();
+		
 		float width = image.getWidth();
 		int height = image.getHeight();
 
-		float pixel = width/idWidth;
+		float pixel = width/idSize[0];
 
-		int left = (int) (pictureStartX * pixel);
-		int top = (int) (pictureStartY * pixel);
-		int w = (int) (pictureWidth * pixel);
-		int h = (int) (pictureHeight * pixel);
+		int[] pictureZone = ProfileManager.getInstance().getDocumentItemCoordinates("PICTURE");
+		int left = (int) (pictureZone[0] * pixel);
+		int top = (int) (pictureZone[1] * pixel);
+		int w = (int) (pictureZone[2] * pixel);
+		int h = (int) (pictureZone[3] * pixel);
 
 		if (left>0 && top>0 && (w+left)<width && (h+top)<height ) {
 			Bitmap result = Bitmap.createBitmap(image, left, top, w, h);
-			Util.writeToDisk(result, "Image");
+			imageFile = Util.writeImageWithTimestamp(result);
 		} else {
 			Log.d(TAG, "Problems encountered while trying to determine the image that will be processed.");
 		}
 	}
 
+	public String getPictureFile() {
+		return imageFile;
+	}
 
 	/**
 	 * 

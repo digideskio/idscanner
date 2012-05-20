@@ -2,8 +2,6 @@ package id.scanner.app;
 
 import id.scanner.app.ocr.Tesseract;
 
-import java.io.File;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
@@ -19,7 +17,7 @@ public class PictureManager implements PictureCallback{
 	public PictureManager(MainActivity mainActivity) {
 		this.activity = mainActivity;
 	}
-	
+
 	
 	@Override
 	public void onPictureTaken(byte[] data, Camera camera) {
@@ -32,12 +30,6 @@ public class PictureManager implements PictureCallback{
 		
 		Bitmap image = Bitmap.createBitmap(bit, 0, 0 , width, height);
 		
-		File pictureFile = Util.getUniqueImageFile();
-		if (pictureFile == null) {
-			Log.d(TAG,"Error creating media file, check storage permission");
-			return;
-		}
-
 		ImageProcessor processor = new ImageProcessor(image);
 		Bitmap ocrZone = processor.getOcrZone();
 		String text = null;
@@ -55,6 +47,7 @@ public class PictureManager implements PictureCallback{
 			confidence = -1; 	// hack for not finding any documents.
 		}
 		
-		activity.showResults(text, confidence);
+		String pictureFile = processor.getPictureFile();
+		activity.showResults(text, confidence, pictureFile );
 	}
 }

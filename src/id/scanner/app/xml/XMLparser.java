@@ -1,6 +1,7 @@
 package id.scanner.app.xml;
 
 import id.scanner.app.R;
+import id.scanner.app.core.Profile;
 
 import java.io.File;
 import java.io.FileInputStream;

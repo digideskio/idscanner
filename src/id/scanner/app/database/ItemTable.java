@@ -1,7 +1,7 @@
 package id.scanner.app.database;
 
+import id.scanner.app.core.Profile;
 import id.scanner.app.xml.DocumentItem;
-import id.scanner.app.xml.Profile;
 
 import java.util.ArrayList;
 
@@ -68,7 +68,6 @@ public class ItemTable implements TableInterface{
 		return result;
 	}
 
-	@Override
 	public String getTableName() {
 		return TABLE_NAME;
 	}

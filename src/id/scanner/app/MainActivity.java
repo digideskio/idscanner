@@ -2,10 +2,10 @@ package id.scanner.app;
 
 import java.util.ArrayList;
 
+import id.scanner.app.core.IDdata;
+import id.scanner.app.core.Profile;
 import id.scanner.app.core.ProfileManager;
 import id.scanner.app.database.DatabaseAdapter;
-import id.scanner.app.ocr.TextDecoder;
-import id.scanner.app.xml.Profile;
 import android.app.Activity;
 import android.content.ContextWrapper;
 import android.content.res.Resources;
@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
 	private static ContextWrapper application;
 	private TransparentProgressDialog progressDialog;
 	private boolean runningProgressDialog = false;
+	private IDdata data;
 	
 	private static int counter = 0;
 	
@@ -99,7 +100,7 @@ public class MainActivity extends Activity {
     	}
 	}
 
-	public void showResults(String text, int c) {
+	public void showResults(String text, int c, String pictureFile) {
 		Toast toast = new Toast(this);
 		
 		if (text != null && c > 70 ) {
@@ -107,16 +108,26 @@ public class MainActivity extends Activity {
 			runningProgressDialog = false;
 			toast.cancel();
 			
+			data = new IDdata();
+			if (!data.setRawText(text)) {
+				return;
+			}
+			data.setPictureFile(pictureFile);
+			
+			ArrayList<String> results = data.getGUIlist(); 
+
+			
 			ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
 			scrollView.setVisibility(View.VISIBLE);
 
 			LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
 
+			
 			TextView tesseractText= new TextView(getApplication());
 			tesseractText.setText(text);
 			resultView.addView(tesseractText);
+
 			
-			ArrayList<String> results = TextDecoder.getDecodedTect(text);
 			
 			for (int i=0; i<results.size()-1; i=i+2 ) {
 				resultView.addView(addLinearLayout(results.get(i), results.get(i+1)));
@@ -170,13 +181,24 @@ public class MainActivity extends Activity {
 	}
 
 	public void onClickOk(View v) {
+		DatabaseAdapter db = new DatabaseAdapter(getApplicationContext());
+		db.open();
+		db.insertData(data);
+		db.close();
+		
+		Toast.makeText(this, "Inserted ID data into database.", Toast.LENGTH_SHORT).show();
+		
 		ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
 		scrollView.setVisibility(View.GONE);
+		
+		((LinearLayout) findViewById(R.id.result_view)).removeAllViews();
 	}
 	
 	public void onClickCancel(View v) {
 		ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
 		scrollView.setVisibility(View.GONE);
+		
+		((LinearLayout) findViewById(R.id.result_view)).removeAllViews();
 	}
 
 	public static Resources getApplicationResources() {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.graphics.Point;
 import id.scanner.app.MainActivity;
-import id.scanner.app.xml.Profile;
+import id.scanner.app.xml.DocumentItem;
 import id.scanner.app.xml.Rectangle;
 import id.scanner.app.xml.XMLparser;
 
@@ -29,12 +29,6 @@ public class ProfileManager {
 		return profile;
 	}
 
-	public Point getPreviewSize() {
-		int x = profile.getPreviewSizeX();
-		int y = profile.getPreviewSizeY();
-		return new Point(x,y);
-	}
-
 	public Point getPictureSize() {
 		int x = profile.getPictureSizeX();
 		int y = profile.getPictureSizeY();
@@ -52,4 +46,44 @@ public class ProfileManager {
 		}
 		return result;
 	}
+	
+	/**
+	 * 
+	 * @param name	The name of the document item.
+	 * @return		x, y, w, h
+	 */
+	public int[] getDocumentItemCoordinates(String name) {
+		int [] result = null;
+		ArrayList<DocumentItem> items = profile.getDocumentItems();
+		
+		for (DocumentItem i: items) {
+			if (i.getName().equalsIgnoreCase(name)) {
+				result = new int[4];
+				
+				result[0] = i.getX();
+				result[1] = i.getY();
+				result[2] = i.getW();
+				result[3] = i.getH();
+				break;
+			}
+			
+		}
+		return result;
+	}
+	
+	public int[] getDocumentSize() {
+		int[] result = new int[2];
+		
+		result[0] = profile.getDocumentSizeX();
+		result[1] = profile.getDocumentSizeY();
+		
+		return result;
+	}
 }
+
+
+
+
+
+
+
