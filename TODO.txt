@@ -1,0 +1,4 @@
+- Save only a subimage.
+- Show the subimage.
+- Compile Teseract.
+- Decode Image with teseract.
