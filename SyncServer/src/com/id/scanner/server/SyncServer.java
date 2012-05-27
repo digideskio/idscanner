@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 
 public class SyncServer extends Thread{
 	protected Socket clientSocket;
@@ -34,7 +35,7 @@ public class SyncServer extends Thread{
     }
 
     public void run() {
-        System.out.println("New Communication Thread Started");
+        System.out.println("New Communication Thread Started" + new Date());
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),true);
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -42,7 +43,7 @@ public class SyncServer extends Thread{
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 System.out.println("Server: " + inputLine);
-                //out.println(inputLine);
+                out.println(inputLine);
 
                 if (inputLine.trim().equals(""))
                     break;

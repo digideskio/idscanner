@@ -6,6 +6,7 @@ import com.id.scanner.core.IDdata;
 import com.id.scanner.core.Profile;
 import com.id.scanner.core.ProfileManager;
 import com.id.scanner.database.DatabaseAdapter;
+import com.id.scanner.synchronize.ServerSynchronization;
 
 import id.scanner.app.R;
 import android.app.Activity;
@@ -148,12 +149,6 @@ public class MainActivity extends Activity {
 		// need to take another picture.
 		toast.show();
 
-//		try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-		
 		if (counter < 15) {
 			counter++;
 			Log.d(TAG, "Rescanning.");
@@ -183,7 +178,10 @@ public class MainActivity extends Activity {
 	}
 
 	public void onClickSync(View v) {
-		Toast.makeText(this, "Synchronization finished.", Toast.LENGTH_SHORT).show();
+		//ServerSynchronization serverSync = new ServerSynchronization();
+		ServerSynchronization serverSync = new ServerSynchronization();
+		serverSync.start();
+		
 	}
 	
 	public void onClickOk(View v) {
