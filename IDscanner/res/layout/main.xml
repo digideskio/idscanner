@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <!-- Use this for camera preview -->
+
+    <com.id.scanner.CameraSurface
+        android:id="@+id/camera_preview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <!-- Overlaid to make finding text areas easier -->
+
+    <com.id.scanner.RectanglesView
+        android:id="@+id/text_rectangles_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <!-- Used for camera button -->
+
+    <RelativeLayout
+        android:id="@+id/camera_button_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <!--android:layout_marginRight="8dip"
+            android:layout_marginTop="8dip"-->
+        <ImageButton
+            android:id="@+id/camera_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/camera"
+            android:clickable="true"
+            android:contentDescription="Camera Button"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:onClick="onClickCamera"
+            android:scaleType="center" />
+        <ImageButton
+            android:id="@+id/sync_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/sync_button"
+            android:clickable="true"
+            android:contentDescription="Sync Button"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:onClick="onClickSync"
+            android:scaleType="center" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" 
+            android:background="@color/result_view_background"
+            android:padding="4dip">
+
+            <LinearLayout
+                android:id="@+id/result_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="4dip" >
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OCR results:" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/result_button_cancel"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:onClick="onClickCancel"
+                    android:text="Cancel" />
+
+                <Button
+                    android:id="@+id/result_button_ok"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:onClick="onClickOk"
+                    android:text="OK" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
