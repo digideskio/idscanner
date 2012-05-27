@@ -16,7 +16,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
 	private static final String TAG = DatabaseAdapter.class.getSimpleName();
 	
 	private static final String DATABASE_NAME = "IDscanner";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 	
 	ArrayList<TableInterface> profileTables = new ArrayList<TableInterface>();
 	private DataTable dataTable;
@@ -129,6 +129,31 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
 		Log.d(TAG, "Inserted data: " + data);
 	}
 	
+	/**
+	 * @return the name of the data table of the current profile.
+	 */
+	public String getProfileTableName() {
+		return DataTable.TABLE_NAME;
+	}
+	
+	/**
+	 * 
+	 * @param lastIndex
+	 */
+	public Cursor getDataTable(int lastIndex) {
+//		String select = "Select * from " + DATABASE_NAME + "." + DataTable.TABLE_NAME + ";";
+//		Cursor cursor = database.rawQuery(select, null);
+		
+		Cursor cursor = database.query(DataTable.TABLE_NAME, 
+				null,			// null = all columns 
+				DataTable.INDEX + ">" + lastIndex, 
+				null, 
+				null, 
+				null, 
+				null);
+		
+		return cursor;
+	}
 }
 
 

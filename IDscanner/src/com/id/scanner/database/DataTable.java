@@ -5,9 +5,10 @@ import com.id.scanner.core.IDdata;
 import android.content.ContentValues;
 
 public class DataTable {
-	private static final String TABLE_NAME = "IDdata";
-
-	private static final String INDEX = "_idData";
+	static final String TABLE_NAME = "IDdata";
+	
+	static final String INDEX = "_idData";
+	
 	private static final String KEY_FNAME = "Nume";
 	private static final String KEY_LNAME = "Prenume";
 	private static final String KEY_S = "Seria";
@@ -23,7 +24,7 @@ public class DataTable {
 			KEY_LNAME + " text not null, " +
 			KEY_S + " text not null, " +
 			KEY_NR + " integer not null, " +
-			KEY_CNP + " integer not null, " +
+			KEY_CNP + " text not null, " +
 			KEY_NAT + " text not null, " +
 			KEY_VALID + " integer not null, " +
 			KEY_PICTURE + " text );";

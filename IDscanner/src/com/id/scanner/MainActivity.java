@@ -52,32 +52,27 @@ public class MainActivity extends Activity {
         
         initializeApplication();
     }
-    
+
     private void initializeApplication() {
-    	//
-    	// Read the xml content each time the application starts.  Could this be optimized?
-    	//
-    	ProfileManager pm = ProfileManager.getInstance();
-    	Profile profile = pm.getCurrentProfile();
+    	DatabaseAdapter db = new DatabaseAdapter(getApplicationContext());
+    	db.open();
 
-    	Log.d(TAG, profile.toString());
+    	ArrayList<String> profiles = db.getProfileList();
+    	//
+    	// If we have no profiles, read the xml and populate the database.
+    	//
+    	if (profiles.size() == 0) {
+    		ProfileManager pm = ProfileManager.getInstance();
+    		Profile profile = pm.getCurrentProfile();
 
-    	if (profile != null) {
-    		DatabaseAdapter db = new DatabaseAdapter(getApplicationContext());
-    		db.open();
+    		Log.d(TAG, profile.toString());
     		
-    		ArrayList<String> profiles = db.getProfileList();
-    		
-    		if ( ! profiles.contains(profile.getName().toUpperCase())) {
-        		db.insertProfile(profile);
-    		} else {
-    			Log.d(TAG, "Database contains xml profile.");
-    		}
-    		db.close();
+    		db.insertProfile(profile);
     	}
+    	db.close();
     }
 
-	@Override
+    @Override
     protected void onResume() {
     	super.onResume();
     	Log.d(TAG, "onResume()");
@@ -88,7 +83,11 @@ public class MainActivity extends Activity {
     	super.onPause();
     	Log.d(TAG, "onPause()");
     }
-    
+ 
+    /**
+     * Called whenever the camera button is clicked. 
+     * @param v
+     */
     public void onClickCamera(View v) {
     	Camera camera = CameraManager.getCamera();
     	PictureManager pictureManager = new PictureManager(this);
@@ -103,6 +102,12 @@ public class MainActivity extends Activity {
     	}
 	}
 
+    /**
+     * Called by CameraManager when ocr process has finished.
+     * @param text
+     * @param c
+     * @param pictureFile
+     */
 	public void showResults(String text, int c, String pictureFile) {
 		Toast toast = new Toast(this);
 		
@@ -160,6 +165,13 @@ public class MainActivity extends Activity {
 		}
 	}
     
+	/**
+	 * 
+	 * @param label
+	 * @param text
+	 * @return		A linear layout containing a text view for "label", and
+	 * 				an EditText for "text".
+	 */
 	private View addLinearLayout(String label, String text) {
 		LinearLayout result = new LinearLayout(getApplicationContext());
 		result.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -177,13 +189,19 @@ public class MainActivity extends Activity {
 		return result;
 	}
 
+	/**
+	 * Used for synchronizing the local database with a remote database.
+	 * @param v
+	 */
 	public void onClickSync(View v) {
-		//ServerSynchronization serverSync = new ServerSynchronization();
-		ServerSynchronization serverSync = new ServerSynchronization();
+		ServerSynchronization serverSync = new ServerSynchronization(this);
 		serverSync.start();
-		
 	}
 	
+	/**
+	 * OK button for inserting the results into the database.
+	 * @param v
+	 */
 	public void onClickOk(View v) {
 		DatabaseAdapter db = new DatabaseAdapter(getApplicationContext());
 		db.open();
