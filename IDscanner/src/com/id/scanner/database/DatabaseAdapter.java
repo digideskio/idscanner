@@ -36,6 +36,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
 		profileTables.add( new ProfileTable());
 		profileTables.add( new ItemTable());
 		profileTables.add( new RectangleTable());
+		profileTables.add( new DataSyncTable());
 		
 		dataTable = new DataTable();
 		
