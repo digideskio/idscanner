@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 
 import org.apache.http.auth.AuthenticationException;
 
+import com.id.scanner.core.ProfileManager;
 import com.id.scanner.database.DatabaseAdapter;
 
 import android.content.Context;
@@ -25,14 +26,16 @@ public class ServerSynchronization extends Thread {
 	private DatabaseAdapter db;
 	private int lastIndex;
 	
-	private String ip = "192.168.2.102";
+	private String ip = "192.168.2.100";
 	private int port = 1212;
 
 
 	public ServerSynchronization(Context context) {
 		db = new DatabaseAdapter(context);
 		db.open();
-		lastIndex = 0;				// TODO read this from database;
+		
+		String profileName = ProfileManager.getInstance().getProfileName();
+		lastIndex = db.getSyncIndex(profileName);
 	}
 	
 	
@@ -52,6 +55,7 @@ public class ServerSynchronization extends Thread {
 			
 			this.closeConnection();
 			Log.d(TAG, "Synchronization finished.");
+			
 			db.close();
 		} catch (UnknownHostException e) {
 			db.close();
@@ -71,15 +75,15 @@ public class ServerSynchronization extends Thread {
 	private void sendTableContent() throws AuthenticationException, IOException {
 		Cursor c = db.getDataTable(lastIndex);
 
-		if (c != null ) {
-			c.moveToFirst();
-			
+		if (c != null && c.moveToFirst()) {
 			this.sendTableHeaders(c.getColumnNames());
 			
 			int columnCount = c.getColumnCount();
 			
+			String rowNr = "0", row;
 			while ( ! c.isAfterLast()) {
-				String row = c.getString(0);
+				rowNr = c.getString(0);
+				row = rowNr;
 				
 				for (int i=1; i<columnCount; i++ ) {
 					row += ";" + c.getString(i);
@@ -88,6 +92,10 @@ public class ServerSynchronization extends Thread {
 				
 				c.moveToNext();
 			}
+			//
+			// update the index in the database
+			//
+			db.updateSynchronizationIndex(Integer.valueOf(rowNr));
 		}
 		
 	}
@@ -111,7 +119,7 @@ public class ServerSynchronization extends Thread {
 		output.flush();
 		
 		String st = input.readLine();
-		if ( ! st.equalsIgnoreCase("OK") ) {
+		if ( st == null || ! st.equalsIgnoreCase("OK") ) {
 			throw new AuthenticationException("Error writing message: " + message);
 		}
 	}
@@ -140,7 +148,11 @@ public class ServerSynchronization extends Thread {
 	}
 	
 	private void sendStop() throws AuthenticationException, IOException {
-		this.writeMessage("stop");
+		try {
+			this.writeMessage("stop");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
 

@@ -77,6 +77,7 @@ public class ImageProcessor {
 			return extractOCRzone(document);
 		}  else {
 			Log.d(TAG, "Problems encountered while trying to determine document margins.");
+			FileUtils.writeNoDocumentImage(mImage);
 		}
 		return null;
 	}
@@ -115,6 +116,7 @@ public class ImageProcessor {
 			return result;
 		} else {
 			Log.d(TAG, "Problems encountered while trying to determine the image that will be processed.");
+			FileUtils.writeNoDocumentImage(image);
 		}
 		return null;
 	}
@@ -136,7 +138,7 @@ public class ImageProcessor {
 
 		if (left>0 && top>0 && (w+left)<width && (h+top)<height ) {
 			Bitmap result = Bitmap.createBitmap(image, left, top, w, h);
-			imageFile = Util.writeImageWithTimestamp(result);
+			imageFile = FileUtils.writeImageWithTimestamp(result);
 		} else {
 			Log.d(TAG, "Problems encountered while trying to determine the image that will be processed.");
 		}

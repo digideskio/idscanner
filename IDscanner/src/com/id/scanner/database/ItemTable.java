@@ -11,7 +11,7 @@ import android.content.ContentValues;
 public class ItemTable implements TableInterface{
 	private static final String TABLE_NAME = "Item";
 
-	private static final String INDEX = "_idItem";
+	private static final String INDEX = "idItem";
 	private static final String KEY_NAME = "name";
 	private static final String KEY_TYPE = "type";
 	private static final String KEY_X = "x";

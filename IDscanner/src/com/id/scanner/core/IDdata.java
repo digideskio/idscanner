@@ -2,10 +2,61 @@ package com.id.scanner.core;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 public class IDdata {
+	private static final String TAG = IDdata.class.getSimpleName();
+	
+	// serii valide de buletin
+	private static final String[] serii = {
+		"AR",
+		"AS",
+		"AX",
+		"BV",
+		"DD",
+		"DP", "DR", "DT",
+		"RD", "RR", "RT",
+		"RX",
+		"DX",
+		"GG",
+		"GL",
+		"GZ",
+		"HD",
+		"HR",
+		"IF",
+		"KL",
+		"KS",
+		"KT",
+		"KV",
+		"KX",
+		"MM",
+		"MS",
+		"MX",
+		"NT",
+		"OT",
+		"PH",
+		"PX",
+		"SB",
+		"SM",
+		"SV",
+		"SX",
+		"SZ",
+		"TC",
+		"TM",
+		"TR",
+		"VN",
+		"VS",
+		"VX",
+		"XB",
+		"XC",
+		"XH",
+		"XR",
+		"XT",
+		"XZ"
+	};
 
 	// used for GUI.
-	private String[] fields = {
+	private static final String[] fields = {
 			"Nume:",			// 0
 			"Prenume:",			// 1
 			"Seria:",			// 2
@@ -16,6 +67,20 @@ public class IDdata {
 			"Valabilitate:",	// 7
 			"CNP:"				// 8
 	};
+	public static final int NR_OF_FIELDS = 9;		//  not such a good solution.
+	
+	private static final String[] valid = {
+		"0",
+		"0",
+		"0",
+		"0",
+		"0",
+		"0",
+		"0",
+		"0",
+		"0",
+	};
+
 	private String pictureLocation;
 
 	private String nume;
@@ -83,6 +148,8 @@ public class IDdata {
 			this.valabilitate = Integer.valueOf(names[1].substring(12,18));
 
 			this.CNP = (sex == 'M'?"1" : "2" + this.dataNasteri + names[1].substring(20,26));
+			
+			this.validate();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,35 +158,133 @@ public class IDdata {
 		return true;
 	}
 
+	/**
+	 * Validate that the data read is correct.
+	 */
+	private void validate() {
+		//
+		// Validate name and surname:
+		//
+		if ( ! this.isUpperAlpha(nume)) {
+			fields[0] = "1";
+		}
+		
+		if ( ! this.isUpperAlphaWithSpace(nume)) {
+			fields[1] = "1";
+		}
+		//
+		// validate seria
+		//
+		valid[2] = "1";							// presupun ca seria este invalida, si incerc sa o validez
+		for (int i=0; i<serii.length; i++) {
+			if (serii[i].equals(seria)) {
+				valid[2] = "0";
+			}
+		}
+		//
+		// validate numarul
+		//
+		if (numarul < 100000 || numarul > 999999 ) {
+			valid[3] = "1";
+		}
+		//
+		// validate sex
+		//
+		if ( ! (sex == 'M' || sex == 'F')) {
+			valid[6] = "1";
+		}
+		//
+		// validate CNP
+		//
+		if ( ! (isNumber(CNP) && isValidCNP(CNP))) {
+			valid[8] = "1";
+		}
+		
+	}
+
+	private boolean isValidCNP(String cNP2) {
+		return true;
+	}
+
+	private boolean isNumber(String cnp) {
+		for (int i=0;i<cnp.length(); i++) {
+			if ( ! (cnp.charAt(i) >= '0' && cnp.charAt(i) <= '9' )) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param nume2
+	 * @return		true if the string only contains upper case letters and spaces.
+	 */
+	private boolean isUpperAlphaWithSpace(String nume2) {
+		for (int i=0;i<nume2.length(); i++) {
+			if ( ! Character.isUpperCase(nume2.charAt(i)) && Character.isWhitespace(nume2.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * @param nume2
+	 * @return			true if the string only contains upper case letters.
+	 */
+	private boolean isUpperAlpha(String nume2) {
+		for (int i=0;i<nume2.length(); i++) {
+			if ( ! Character.isUpperCase(nume2.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * @return	A list containing label name and value that will be shown in the 
+	 * GUI, plus a number: 0 = valid, 1 = invalid, so make it red.
+	 */
 	public ArrayList<String> getGUIlist() {
 		ArrayList<String> result = new ArrayList<String>();
 
 		result.add(fields[0]);
 		result.add(nume);
+		result.add(valid[0]);
 
 		result.add(fields[1]);
 		result.add(prenume);
+		result.add(valid[1]);
 
 		result.add(fields[2]);
 		result.add(seria);
+		result.add(valid[2]);
 
 		result.add(fields[3]);
 		result.add(numarul + "");
-
+		result.add(valid[3]);
+		
 		result.add(fields[4]);
 		result.add(cetatenia+"");
-
+		result.add(valid[4]);
+		
 		result.add(fields[5]);
 		result.add(dataNasteri+"");
-
+		result.add(valid[5]);
+		
 		result.add(fields[6]);
 		result.add(sex+"");
-
+		result.add(valid[6]);
+		
 		result.add(fields[7]);
 		result.add(valabilitate+"");
-
+		result.add(valid[7]);
+		
 		result.add(fields[8]);
 		result.add(CNP);
+		result.add(valid[8]);
+		
 		return result;
 	}
 
@@ -180,6 +345,44 @@ public class IDdata {
 		result += "Picture file: " + pictureLocation;
 		return result;
 	}
+
+	public void setField(String value, int i) {
+		try {
+			switch (i){
+			case 0:
+				this.nume = value;
+				break;
+			case 1:
+				this.prenume = value;
+				break;
+			case 2:
+				this.seria = value;
+				break;
+			case 3:
+				this.numarul = Integer.valueOf(value);
+				break;
+			case 4:
+				this.cetatenia = Integer.valueOf(value);
+				break;
+			case 5:
+				this.dataNasteri= Integer.valueOf(value);
+				break;
+			case 6:
+				this.sex = value.charAt(0);
+				break;
+			case 7:
+				this.valabilitate = Integer.valueOf(value);
+				break;
+			case 8:
+				this.CNP = value;
+				break;
+			}
+		} catch (Exception e) {
+			Log.d(TAG, "Some values inserted in the GUI are incorect");
+		}
+		
+	}
+	
 }
 
 

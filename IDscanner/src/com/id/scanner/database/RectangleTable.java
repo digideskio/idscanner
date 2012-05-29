@@ -11,7 +11,7 @@ import android.content.ContentValues;
 public class RectangleTable implements TableInterface {
 	private static final String TABLE_NAME = "Rectangle";
 
-	private static final String INDEX = "_idRect";
+	private static final String INDEX = "idRect";
 	private static final String KEY_A = "a";
 	private static final String KEY_B = "b";
 	private static final String KEY_C = "c";

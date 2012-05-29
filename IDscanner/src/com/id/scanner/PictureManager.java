@@ -41,6 +41,12 @@ public class PictureManager implements PictureCallback{
 			
 			text = tess.getText();
 			confidence = tess.getConfidence();
+			//
+			// Use this for debugging  
+			//
+			if (confidence < 70) {
+				FileUtils.writeNoTextImage(ocrZone);
+			}
 			
 			Log.d(TAG, "Teseract returned: " + text);
 		} else {

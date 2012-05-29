@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.id.scanner.core.IDdata;
 import com.id.scanner.core.Profile;
+import com.id.scanner.core.ProfileManager;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -16,11 +17,11 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
 	private static final String TAG = DatabaseAdapter.class.getSimpleName();
 	
 	private static final String DATABASE_NAME = "IDscanner";
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 9;
 	
 	ArrayList<TableInterface> profileTables = new ArrayList<TableInterface>();
 	private DataTable dataTable;
-	
+
 	private SQLiteDatabase database;
 
 	
@@ -36,34 +37,37 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
 		profileTables.add( new ProfileTable());
 		profileTables.add( new ItemTable());
 		profileTables.add( new RectangleTable());
-		profileTables.add( new DataSyncTable());
 		
 		dataTable = new DataTable();
-		
+
 		database = getWritableDatabase();
 	}
 	
 	/**
 	 * Insert the content of profile to the database.
+	 * Iterate trough the list of tables that extend "TableInterface" and call
+	 * the insert method on the profile.
 	 * @param p	The profile to insert.
 	 */
-	public boolean insertProfile(Profile p){
-		try {
-			ArrayList<ContentValues> values;
-			
-			for (TableInterface table: profileTables) {
-				values = table.insert(p);
-				
-				for (ContentValues v: values) {
-					database.insert(table.getTableName(), null, v);
+	public boolean insertProfile(ArrayList<Profile> profiles){
+		ArrayList<ContentValues> values;
+		
+		for (Profile p: profiles) {
+			try {
+				for (TableInterface table: profileTables) {
+					values = table.insert(p);
+					
+					for (ContentValues v: values) {
+						database.insert(table.getTableName(), null, v);
+					}
 				}
-			}
 			
-		} catch (Exception e) {
-			Log.d(TAG,"Exceeption raised when inseting profile " + p.getName() +" in database: " +e);
-			return false;
+			} catch (Exception e) {
+				Log.d(TAG,"Exceeption raised when inseting profile " + p.getName() +" in database: " +e);
+				return false;
+			}
+			Log.d(TAG, "Successfully inserted profile " + p.getName() + " in database.");
 		}
-		Log.d(TAG, "Successfully inserted profile " + p.getName() + " in database.");
 		return true;
 	}
 
@@ -122,7 +126,10 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         return result;
 	}
 
-
+	/**
+	 * Insert the data that was read from the image into the database
+	 * @param data
+	 */
 	public void insertData(IDdata data) {
 		ContentValues values = dataTable.insert(data);
 		database.insert(dataTable.getTableName(), null, values);
@@ -142,9 +149,6 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
 	 * @param lastIndex
 	 */
 	public Cursor getDataTable(int lastIndex) {
-//		String select = "Select * from " + DATABASE_NAME + "." + DataTable.TABLE_NAME + ";";
-//		Cursor cursor = database.rawQuery(select, null);
-		
 		Cursor cursor = database.query(DataTable.TABLE_NAME, 
 				null,			// null = all columns 
 				DataTable.INDEX + ">" + lastIndex, 
@@ -154,6 +158,45 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
 				null);
 		
 		return cursor;
+	}
+
+
+	public int getSyncIndex(String profileName) {
+		int result = 0;
+		
+		Cursor cursor = database.query(ProfileTable.TABLE_NAME, 
+				new String[] {ProfileTable.KEY_SYNC_INDEX},			 
+				ProfileTable.INDEX + "=\"" + profileName + "\"", 
+				null, 
+				null, 
+				null, 
+				null);
+		if (cursor.moveToFirst()) {
+			try {
+				result = cursor.getInt(0);
+			} catch (Exception e) {
+				Log.e(TAG, "Exception trying to get sync index for profile " + profileName + " from database");
+			}
+		}
+		
+		return result;
+	}
+
+
+	public void updateSynchronizationIndex(Integer syncValue) {
+		String profileName = ProfileManager.getInstance().getProfileName();
+		
+		ContentValues value = new ContentValues();
+		value.put(ProfileTable.KEY_SYNC_INDEX, syncValue);
+		
+		int rows = database.update(ProfileTable.TABLE_NAME,
+				value,
+				ProfileTable.INDEX + "=\"" + profileName + "\"",
+				null);
+		
+		if (rows != 1) {
+			Log.w(TAG, "Updating the sync value in the profile table affected more than 1 row!!!");
+		}
 	}
 }
 

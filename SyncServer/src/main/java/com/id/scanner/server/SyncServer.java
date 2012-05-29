@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.security.sasl.AuthenticationException;
@@ -18,9 +19,13 @@ public class SyncServer extends Thread{
 	private boolean _weKnowTableName = false;
 	private boolean _weKnowTableHeaders = false;
 
+	private ArrayList<String> keys;
+	private DatabaseAdapter db;
+	
 
-	public SyncServer(Socket clientSoc) {
+	public SyncServer(Socket clientSoc, DatabaseAdapter db) {
 		clientSocket = clientSoc;
+		this.db = db;
 		start();
 	}
 
@@ -36,6 +41,7 @@ public class SyncServer extends Thread{
 				if ( ! isStopMessage(inputLine) ) {
 					this.handleMessage(inputLine);
 				} else {
+					out.println("OK");
 					break;
 				}
 				
@@ -104,12 +110,35 @@ public class SyncServer extends Thread{
 		System.out.println(message);
 		if (_weKnowTableName) {
 			if (_weKnowTableHeaders) {
-				//handle data
+				//
+				// handle table data
+				//
+				ArrayList<String> values = new ArrayList<String>();
+				
+				String[] aux = message.split(";");
+				
+				for (int  i=0; i<aux.length; i++) {
+					values.add(aux[i]);
+				}
+				if (db.insert(keys, values)) {
+					System.out.println("Inserted row nr " + values.get(0) + " into database.");
+				}
+				
 			} else {
+				//
 				// handle table headers
+				//
+				keys = new ArrayList<String>();
+				String[] aux = message.split(";");
+				
+				for (int  i=0; i<aux.length; i++) {
+					keys.add(aux[i]);
+				}
+				
+				_weKnowTableHeaders = true;
 			}
 		} else {
-			// handle table name
+			_weKnowTableName = true;
 		}
 	}
 

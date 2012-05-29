@@ -1,6 +1,8 @@
 package com.id.scanner.xml;
 
 
+import java.util.ArrayList;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -22,12 +24,13 @@ public class DataHandler extends DefaultHandler {
 	private boolean _inType= false;
 	private boolean _inItemName = false;
 	
-	private Profile profile;			// TODO  make this an ArrayList of profiles;
+	private ArrayList<Profile> profiles = new ArrayList<Profile>();
+	private Profile profile;
 	private DocumentItem documentItem;
 
 	
-	public Profile getProfileData() {
-		return profile;
+	public ArrayList<Profile> getProfileData() {
+		return profiles;
 	}
 	
 	@Override
@@ -109,8 +112,9 @@ public class DataHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		if (localName.equalsIgnoreCase("PROFILE")) {
-			//profile= null;
 			_inProfile = false;
+			profiles.add(profile);
+			
 		} else if (_inProfile) {
 			if (localName.equalsIgnoreCase("NAME")) {
 				_inName = false;

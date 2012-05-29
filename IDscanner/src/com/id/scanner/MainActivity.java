@@ -7,11 +7,12 @@ import com.id.scanner.core.Profile;
 import com.id.scanner.core.ProfileManager;
 import com.id.scanner.database.DatabaseAdapter;
 import com.id.scanner.synchronize.ServerSynchronization;
+import com.id.scanner.xml.XMLparser;
 
 import id.scanner.app.R;
 import android.app.Activity;
-import android.content.ContextWrapper;
-import android.content.res.Resources;
+import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,47 +29,50 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private static final String TAG = MainActivity.class.getSimpleName();
-	// not sure using this is a good idea.
-	private static ContextWrapper application;
 	private TransparentProgressDialog progressDialog;
 	private boolean runningProgressDialog = false;
 	private IDdata data;
 	
 	private static int counter = 0;
+	private static Context context;
 	
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        application = getApplication();
-        
+
         Log.d(TAG, "onCreate()");
+
+        initializeProfile();
+        context = this.getApplicationContext();
         
 		Window window = getWindow();
 	    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	    
         setContentView(R.layout.main);
-        
-        initializeApplication();
     }
 
-    private void initializeApplication() {
+    private void initializeProfile() {
     	DatabaseAdapter db = new DatabaseAdapter(getApplicationContext());
     	db.open();
 
-    	ArrayList<String> profiles = db.getProfileList();
+    	ArrayList<String> dbProfiles = db.getProfileList();
+    	
+    	XMLparser parser = new XMLparser(this.getResources());
+    	ArrayList<Profile> xmlProfiles = parser.parseXmlResource();
     	//
-    	// If we have no profiles, read the xml and populate the database.
+    	// If we have no profiles, populate the database.
     	//
-    	if (profiles.size() == 0) {
-    		ProfileManager pm = ProfileManager.getInstance();
-    		Profile profile = pm.getCurrentProfile();
-
-    		Log.d(TAG, profile.toString());
-    		
-    		db.insertProfile(profile);
+    	if (dbProfiles.size() == 0) {
+    		db.insertProfile(xmlProfiles);
     	}
+    	
+    	Profile profile = xmlProfiles.get(0);
+    	ProfileManager.getInstance().setCurrentProfile(profile);
+
+    	Log.d(TAG, profile.toString());
+    	
     	db.close();
     }
 
@@ -117,42 +121,44 @@ public class MainActivity extends Activity {
 			toast.cancel();
 			
 			data = new IDdata();
-			if (!data.setRawText(text)) {
+			
+			if (data.setRawText(text)) {
+				data.setPictureFile(pictureFile);
+				
+				ArrayList<String> results = data.getGUIlist(); 
+	
+				
+				ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
+				scrollView.setVisibility(View.VISIBLE);
+	
+				LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
+	
+				
+				TextView tesseractText= new TextView(getApplication());
+				tesseractText.setText(text);
+				resultView.addView(tesseractText);
+	
+				
+				
+				for (int i=0; i<results.size()-1; i=i+3 ) {
+					resultView.addView(addLinearLayout(results.get(i), results.get(i+1), results.get(i+2), i/3));
+				}
+	
+				TextView confidence = new TextView(getApplication());
+				confidence.setText("Confidence: " + c);
+				resultView.addView(confidence);
+				
 				return;
 			}
-			data.setPictureFile(pictureFile);
-			
-			ArrayList<String> results = data.getGUIlist(); 
-
-			
-			ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
-			scrollView.setVisibility(View.VISIBLE);
-
-			LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
-
-			
-			TextView tesseractText= new TextView(getApplication());
-			tesseractText.setText(text);
-			resultView.addView(tesseractText);
-
-			
-			
-			for (int i=0; i<results.size()-1; i=i+2 ) {
-				resultView.addView(addLinearLayout(results.get(i), results.get(i+1)));
-			}
-
-			TextView confidence = new TextView(getApplication());
-			confidence.setText("Confidence: " + c);
-			resultView.addView(confidence);
-			
-			return;
 		} else if ( c == -1 ) {		// hack for not finding any documents
 			toast = Toast.makeText(this, "No document was identified in the picture", Toast.LENGTH_SHORT);
+			toast.show();
 		} else {					// tesseract could not interpret image
 			toast = Toast.makeText(this, "No text found", Toast.LENGTH_SHORT);
+			toast.show();
 		}
 		// need to take another picture.
-		toast.show();
+		
 
 		if (counter < 15) {
 			counter++;
@@ -169,10 +175,11 @@ public class MainActivity extends Activity {
 	 * 
 	 * @param label
 	 * @param text
+	 * @param valid 
 	 * @return		A linear layout containing a text view for "label", and
 	 * 				an EditText for "text".
 	 */
-	private View addLinearLayout(String label, String text) {
+	private View addLinearLayout(String label, String text, String valid, int id) {
 		LinearLayout result = new LinearLayout(getApplicationContext());
 		result.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		result.setOrientation(LinearLayout.HORIZONTAL);
@@ -182,6 +189,11 @@ public class MainActivity extends Activity {
 		
 		EditText value = new EditText(getApplication());
 		value.setText(text);
+		
+		if ( ! valid.equals("0")) {
+			value.setTextColor(Color.RED);
+		}
+		value.setId(id);
 		
 		result.addView(type);
 		result.addView(value);
@@ -203,6 +215,16 @@ public class MainActivity extends Activity {
 	 * @param v
 	 */
 	public void onClickOk(View v) {
+		//
+		// Create a data object with the values from the GUI
+		// Use the old data object in case something goes wrong.
+		//
+		for (int i=0;i<IDdata.NR_OF_FIELDS;i++) {
+			String value = ((EditText)findViewById(i)).getText().toString();
+			data.setField(value, i);
+		}
+		
+		
 		DatabaseAdapter db = new DatabaseAdapter(getApplicationContext());
 		db.open();
 		db.insertData(data);
@@ -212,7 +234,9 @@ public class MainActivity extends Activity {
 		
 		ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
 		scrollView.setVisibility(View.GONE);
-		
+		//
+		// remove what was added so that on the next opening, everything is new.
+		//
 		((LinearLayout) findViewById(R.id.result_view)).removeAllViews();
 	}
 	
@@ -223,8 +247,8 @@ public class MainActivity extends Activity {
 		((LinearLayout) findViewById(R.id.result_view)).removeAllViews();
 	}
 
-	public static Resources getApplicationResources() {
-		return application.getResources();
+	public static Context getMainApplicationContext() {
+		return context;
 	}
-    
+
 }

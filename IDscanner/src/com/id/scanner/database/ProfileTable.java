@@ -14,13 +14,15 @@ public class ProfileTable implements TableInterface{
 	private static final String KEY_PICT_Y = "pictureSizeY";
 	private static final String KEY_DOC_X = "documentSizeX";
 	private static final String KEY_DOC_Y = "documentSizeY";
+	static final String KEY_SYNC_INDEX = "SyncIndex";
 	
 	private static final String TABLE_CREATE = "create table " + TABLE_NAME +
 			" ( "+ INDEX + " text primary key, " +
 			KEY_PICT_X + " integer not null, " +
 			KEY_PICT_Y + " integer not null, " +
 			KEY_DOC_X + " integer not null, " +
-			KEY_DOC_Y + " integer not null); ";
+			KEY_DOC_Y + " integer not null, " +
+			KEY_SYNC_INDEX + " integer not null ); ";
 	
 	private static final String TABLE_DROP = "drop table if exists " + TABLE_NAME;
 	
@@ -45,6 +47,7 @@ public class ProfileTable implements TableInterface{
 		values.put(KEY_PICT_Y, p.getPictureSizeY());
 		values.put(KEY_DOC_X, p.getDocumentSizeX());
 		values.put(KEY_DOC_Y, p.getDocumentSizeY());
+		values.put(KEY_SYNC_INDEX, 0);
 
 		result.add(values);
 		return result;

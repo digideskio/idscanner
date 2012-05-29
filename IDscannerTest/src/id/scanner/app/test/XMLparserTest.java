@@ -1,5 +1,7 @@
 package id.scanner.app.test;
 
+import java.util.ArrayList;
+
 import com.id.scanner.core.Profile;
 import com.id.scanner.xml.DocumentItem;
 import com.id.scanner.xml.Rectangle;
@@ -9,15 +11,15 @@ import junit.framework.TestCase;
 
 public class XMLparserTest extends TestCase {
 	//private String pathToXml = "/data/workspace/android/main/IDscanner/res/raw/profile.xml";
-	private String pathToXml = "/mnt/sdcard/Pictures/IDscanner/profile.xml";
+	private String pathToXml = "/mnt/sdcard/Pictures/IDscanner/data.xml";
 
 	public void testParseXml() {
 		XMLparser parser = new XMLparser(pathToXml);
-		Profile actual = parser.parseXml();
+		ArrayList<Profile> actual = parser.parseXml();
 		
 		Profile expected = new Profile();
 		
-		expected.setName("CI");
+		expected.setName("CI-ROU");
 		expected.setDocumentSize("105x74");
 		expected.setPictureSize("2592x1458");
 		
@@ -33,9 +35,12 @@ public class XMLparserTest extends TestCase {
 		DocumentItem picture = new DocumentItem();
 		picture.setName("Picture");
 		picture.setType("picture");
-		picture.setValues(6, 50, 30, 38);
+		picture.setValues(3, 8, 29, 34);
 		expected.addDocumentItem(picture);
 		
-		assertEquals(expected, actual);
+		assertEquals(expected, actual.get(0));
+		
+		expected.setName("PASSPORT-ROU");
+		assertEquals(expected, actual.get(1));
 	}
 }

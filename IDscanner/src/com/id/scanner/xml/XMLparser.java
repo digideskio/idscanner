@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -44,8 +45,8 @@ public class XMLparser {
 
 
 	// Unused?
-	public Profile parseXml() { 
-		Profile profile = null; 
+	public ArrayList<Profile> parseXml() { 
+		ArrayList<Profile> profiles = null; 
 
 		if (xmlFile.exists()) {
 			try { 
@@ -59,7 +60,7 @@ public class XMLparser {
 
 				xr.parse(new InputSource(new FileInputStream(xmlFile ))); 
 
-				profile = dataHandler.getProfileData(); 
+				profiles = dataHandler.getProfileData(); 
 
 			} catch(ParserConfigurationException pce) { 
 				Log.e(TAG, "sax parse error", pce); 
@@ -71,11 +72,11 @@ public class XMLparser {
 		} else {
 			Log.d(TAG, "XML file not found on disk.");
 		}
-		return profile; 
+		return profiles; 
 	}
 
-	public Profile parseXmlResource() { 
-		Profile profile = null; 
+	public ArrayList<Profile> parseXmlResource() { 
+		ArrayList<Profile> profiles = null; 
 
 		try {
 			
@@ -90,7 +91,7 @@ public class XMLparser {
 			InputStream input = resources.openRawResource(R.raw.profile);
 			xr.parse(new InputSource(input)); 
 
-			profile = dataHandler.getProfileData(); 
+			profiles = dataHandler.getProfileData(); 
 
 		} catch(ParserConfigurationException pce) { 
 			Log.e(TAG, "sax parse error", pce); 
@@ -99,6 +100,6 @@ public class XMLparser {
 		} catch(IOException ioe) { 
 			Log.e("SAX XML", "sax parse io error", ioe); 
 		} 
-		return profile; 
+		return profiles; 
 	}
 }

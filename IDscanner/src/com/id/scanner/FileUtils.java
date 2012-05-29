@@ -11,9 +11,11 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 
-public class Util {
-	private static final String TAG = Util.class.getSimpleName();
+public class FileUtils {
+	private static final String TAG = FileUtils.class.getSimpleName();
 	private static final String DIR_NAME = "IDscanner";
+	private static final String PROBLEMS_DIR_DOC = "NoDocument/";
+	private static final String PROBLEMS_DIR_TESS = "NoText/";
 
 	/**
 	 * Write a bitmap to disk.
@@ -43,7 +45,7 @@ public class Util {
 	 * @param name	the name of the file.
 	 */
 	public static String writeImageWithTimestamp(Bitmap image) {
-		File pictureFile = getUniqueImageFile();
+		File pictureFile = getUniqueImageFile("");
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(pictureFile);
@@ -63,16 +65,67 @@ public class Util {
 	}
 	
 	/**
+	 * Used for writing images that can't identify a document.
+	 * @param image
+	 * @return
+	 */
+	public static void writeNoDocumentImage(Bitmap image) {
+		File pictureFile = getUniqueImageFile(PROBLEMS_DIR_DOC);
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(pictureFile);
+			
+			image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+			
+			fos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Used for writing images that can't identify a document.
+	 * @param image
+	 * @return
+	 */
+	public static void writeNoTextImage(Bitmap image) {
+		File pictureFile = getUniqueImageFile(PROBLEMS_DIR_TESS);
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(pictureFile);
+			
+			image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+			
+			fos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Create a File for saving an image
 	 * @return	A file with timestamp and jpg extension.
 	 */
-	public static File getUniqueImageFile(){
+	public static File getUniqueImageFile(String dir){
 		String storageDir = getMediaStorageDir();
 	    //
 	    // Create a media file name
 	    //
 	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-	    File mediaFile = new File(storageDir + File.separator +"IMG_"+ timeStamp + ".jpg");
+	    
+	    File dirFile = new File(storageDir + dir);
+	    if (! dirFile.exists()){
+	        if (! dirFile.mkdirs()){
+	            Log.d(TAG, "failed to create directory");
+	            return null;
+	        }
+	    }
+	    
+	    File mediaFile = new File(storageDir + dir +"IMG_"+ timeStamp + ".jpg");
 
 	    return mediaFile;
 	}

@@ -7,7 +7,7 @@ import android.content.ContentValues;
 public class DataTable {
 	static final String TABLE_NAME = "IDdata";
 	
-	static final String INDEX = "_idData";
+	static final String INDEX = "idData";
 	
 	private static final String KEY_FNAME = "Nume";
 	private static final String KEY_LNAME = "Prenume";

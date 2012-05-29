@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <root>
     <profile>
-        <name>CI</name>
+        <name>CI-ROU</name>
         <!-- values in pixels -->
         <pictureSize>2592x1458</pictureSize>
 
@@ -11,6 +11,26 @@
         </display>
 
         <!-- values in mm -->
+        <documentSize>105x74</documentSize>
+        <data>
+            <item>
+                <itemName>OCRzone</itemName>
+                <type>text</type>
+                <position x="6" y="50" w="95" h="13"/>
+            </item>
+            <item>
+                <itemName>Picture</itemName>
+                <type>picture</type>
+                <position x="3" y="8" w="29" h="34"/>
+            </item>
+        </data>
+    </profile>
+    <profile>
+        <name>PASSPORT-ROU</name>
+        <pictureSize>2592x1458</pictureSize>
+        <display>
+            <rectangle a="152" b="45" c="1044" d="675"/>
+        </display>
         <documentSize>105x74</documentSize>
         <data>
             <item>

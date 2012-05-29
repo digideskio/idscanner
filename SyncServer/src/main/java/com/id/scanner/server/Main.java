@@ -1,6 +1,8 @@
 package com.id.scanner.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 
 public class Main {
@@ -9,19 +11,28 @@ public class Main {
 	public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
 
+        DatabaseAdapter db = new DatabaseAdapter();
+        db.open();
+        
         try {
             serverSocket = new ServerSocket(port);
             System.out.println("Connection Socket Created");
 
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             while (true) {
                 System.out.println("Waiting for Connection");
-                new SyncServer(serverSocket.accept());
+                new SyncServer(serverSocket.accept(), db);
             }
         } catch (IOException e) {
             System.err.println("Could not listen on port: " + port);
+            db.close();
             System.exit(1);
+        } catch (Exception e) {
+        	serverSocket.close();
+            db.close();
         }
         serverSocket.close();
+        db.close();
     }
 
 }

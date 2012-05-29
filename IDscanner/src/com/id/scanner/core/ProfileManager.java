@@ -2,10 +2,8 @@ package com.id.scanner.core;
 
 import java.util.ArrayList;
 
-import com.id.scanner.MainActivity;
 import com.id.scanner.xml.DocumentItem;
 import com.id.scanner.xml.Rectangle;
-import com.id.scanner.xml.XMLparser;
 
 import android.graphics.Point;
 
@@ -15,8 +13,6 @@ public class ProfileManager {
 	private static ProfileManager instance = null;
 	
 	private ProfileManager() {	
-    	XMLparser parser = new XMLparser(MainActivity.getApplicationResources());
-    	profile = parser.parseXmlResource();
 	}
 	
 	public static ProfileManager getInstance() {
@@ -29,6 +25,10 @@ public class ProfileManager {
 	public Profile getCurrentProfile() {
 		return profile;
 	}
+	
+	public void setCurrentProfile (Profile p) {
+		profile = p;
+	}
 
 	public Point getPictureSize() {
 		int x = profile.getPictureSizeX();
@@ -36,7 +36,6 @@ public class ProfileManager {
 		return new Point(x,y);
 	}
 
-		// TODO Auto-generated method stub
 	public int[][] getDispalys() {
 		ArrayList<Rectangle> rectangles = profile.getDisplayObjects();
 		int size = rectangles.size();
@@ -79,6 +78,10 @@ public class ProfileManager {
 		result[1] = profile.getDocumentSizeY();
 		
 		return result;
+	}
+	
+	public String getProfileName() {
+		return profile.getName();
 	}
 }
 
