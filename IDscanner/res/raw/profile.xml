@@ -21,9 +21,11 @@
             <item>
                 <itemName>Picture</itemName>
                 <type>picture</type>
-                <position x="3" y="8" w="29" h="34"/>
+                <position x="4" y="8" w="28" h="33"/>
             </item>
         </data>
+        <serverIp>192.168.2.100</serverIp>
+        <serverPort>1212</serverPort>
     </profile>
     <profile>
         <name>PASSPORT-ROU</name>
@@ -44,5 +46,7 @@
                 <position x="3" y="8" w="29" h="34"/>
             </item>
         </data>
+        <serverIp>192.168.2.100</serverIp>
+        <serverPort>1212</serverPort>
     </profile>
 </root>

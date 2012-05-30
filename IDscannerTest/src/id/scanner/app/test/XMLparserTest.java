@@ -10,8 +10,7 @@ import com.id.scanner.xml.XMLparser;
 import junit.framework.TestCase;
 
 public class XMLparserTest extends TestCase {
-	//private String pathToXml = "/data/workspace/android/main/IDscanner/res/raw/profile.xml";
-	private String pathToXml = "/mnt/sdcard/Pictures/IDscanner/data.xml";
+	private String pathToXml = "/mnt/sdcard/Pictures/IDscanner/profile.xml";
 
 	public void testParseXml() {
 		XMLparser parser = new XMLparser(pathToXml);
@@ -22,6 +21,8 @@ public class XMLparserTest extends TestCase {
 		expected.setName("CI-ROU");
 		expected.setDocumentSize("105x74");
 		expected.setPictureSize("2592x1458");
+		expected.setServerIp("192.168.2.100");
+		expected.setServerPort(1212);
 		
 		Rectangle rect = new Rectangle(152, 45, 1044, 675);
 		expected.addDisplayObject(rect);

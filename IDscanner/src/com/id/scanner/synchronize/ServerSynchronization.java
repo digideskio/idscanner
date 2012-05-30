@@ -31,6 +31,10 @@ public class ServerSynchronization extends Thread {
 
 
 	public ServerSynchronization(Context context) {
+		ProfileManager pm= ProfileManager.getInstance();
+		this.ip = pm.getIp();
+		this.port = pm.getPort();
+		
 		db = new DatabaseAdapter(context);
 		db.open();
 		

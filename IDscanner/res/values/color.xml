@@ -3,5 +3,5 @@
     <color name="TextRectaglesForegraund">#60000000</color>
     <color name="RectangleBorder">#ffffffff</color>
     <color name="result_view_background">#b0000000</color>
-    
+    <color name="text_header_color">#ffffff</color>
 </resources>

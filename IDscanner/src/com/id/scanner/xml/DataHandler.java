@@ -23,6 +23,8 @@ public class DataHandler extends DefaultHandler {
 	private boolean _inItem = false;
 	private boolean _inType= false;
 	private boolean _inItemName = false;
+	private boolean _inIp = false;
+	private boolean _inPort= false;
 	
 	private ArrayList<Profile> profiles = new ArrayList<Profile>();
 	private Profile profile;
@@ -57,6 +59,12 @@ public class DataHandler extends DefaultHandler {
 			} 
 			else if (localName.equalsIgnoreCase("DOCUMENTSIZE")) {
 				_inDocumentSize = true;
+			} 
+			else if (localName.equalsIgnoreCase("SERVERIP")) {
+				_inIp= true;
+			} 
+			else if (localName.equalsIgnoreCase("SERVERPORT")) {
+				_inPort = true;
 			} 
 			else if (localName.equalsIgnoreCase("DISPLAY")) {
 				_inDisplay = true;
@@ -125,6 +133,12 @@ public class DataHandler extends DefaultHandler {
 			else if (localName.equalsIgnoreCase("DOCUMENTSIZE")) {
 				_inDocumentSize = false;
 			} 
+			else if (localName.equalsIgnoreCase("SERVERIP")) {
+				_inIp = false;
+			} 
+			else if (localName.equalsIgnoreCase("SERVERPORT")) {
+				_inPort = false;
+			}
 			else if (localName.equalsIgnoreCase("DISPLAY")) {
 				_inDisplay = false;
 			} 
@@ -179,7 +193,22 @@ public class DataHandler extends DefaultHandler {
 	    		} catch (Exception e) {
 	    			Log.d(TAG, "Document size incorectly specified in xml.");
 	    		}
-	    	} else if (_inData) {
+	    	} 
+	    	else if (_inIp) {
+	    		try {
+	    			profile.setServerIp(chars);
+	    		} catch (Exception e) {
+	    			Log.d(TAG, "Server ip incorectly specified in xml.");
+	    		}
+	    	}
+	    	else if (_inPort) {
+	    		try {
+	    			profile.setServerPort(Integer.valueOf(chars));
+	    		} catch (Exception e) {
+	    			Log.d(TAG, "Server ip incorectly specified in xml.");
+	    		}
+	    	}
+	    	else if (_inData) {
 	    		if (_inItem) {
 	    			if (_inItemName) {
 	    				this.documentItem.setName(chars);

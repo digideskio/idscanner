@@ -22,14 +22,6 @@ public class ProfileManager {
 		return instance;
 	}
 
-	public Profile getCurrentProfile() {
-		return profile;
-	}
-	
-	public void setCurrentProfile (Profile p) {
-		profile = p;
-	}
-
 	public Point getPictureSize() {
 		int x = profile.getPictureSizeX();
 		int y = profile.getPictureSizeY();
@@ -80,9 +72,12 @@ public class ProfileManager {
 		return result;
 	}
 	
-	public String getProfileName() {
-		return profile.getName();
-	}
+	//========================  getters and setters  ==========================
+	public String getProfileName() {return profile.getName();}
+	public Profile getCurrentProfile() {return profile;}
+	public void setCurrentProfile (Profile p) {profile = p;}
+	public String getIp() { return profile.getServerIp(); }
+	public int getPort() { return profile.getServerPort(); }
 }
 
 

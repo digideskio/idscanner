@@ -1,5 +1,6 @@
 package com.id.scanner;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.id.scanner.core.IDdata;
@@ -12,6 +13,8 @@ import com.id.scanner.xml.XMLparser;
 import id.scanner.app.R;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -21,6 +24,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -115,7 +119,7 @@ public class MainActivity extends Activity {
 	public void showResults(String text, int c, String pictureFile) {
 		Toast toast = new Toast(this);
 		
-		if (text != null && c > 70 ) {
+		if (text != null && c > 65 ) {
 			progressDialog.dismiss();
 			runningProgressDialog = false;
 			toast.cancel();
@@ -134,10 +138,9 @@ public class MainActivity extends Activity {
 				LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
 	
 				
-				TextView tesseractText= new TextView(getApplication());
-				tesseractText.setText(text);
-				resultView.addView(tesseractText);
-	
+//				TextView tesseractText= new TextView(getApplication());
+//				tesseractText.setText(text);
+//				resultView.addView(tesseractText);
 				
 				
 				for (int i=0; i<results.size()-1; i=i+3 ) {
@@ -147,7 +150,11 @@ public class MainActivity extends Activity {
 				TextView confidence = new TextView(getApplication());
 				confidence.setText("Confidence: " + c);
 				resultView.addView(confidence);
-				
+				//
+				// Add the image!
+				//
+				LinearLayout imageView = (LinearLayout) findViewById(R.id.images_view);
+				imageView.addView( this.getImageView() );
 				return;
 			}
 		} else if ( c == -1 ) {		// hack for not finding any documents
@@ -201,6 +208,20 @@ public class MainActivity extends Activity {
 		return result;
 	}
 
+	/**
+	 * @return	an image view containing the scanned image.
+	 */
+	private View getImageView() {
+		ImageView view = new ImageView(this);
+
+		File imgFile = new  File(data.getPictureLocation());
+	    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+		
+		view.setImageBitmap(myBitmap);
+		
+		return view;
+	}
+	
 	/**
 	 * Used for synchronizing the local database with a remote database.
 	 * @param v

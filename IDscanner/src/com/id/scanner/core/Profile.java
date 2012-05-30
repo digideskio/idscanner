@@ -10,6 +10,8 @@ public class Profile {
 	private String name;
 	private int pictureSizeX, pictureSizeY;
 	private int documentSizeX, documentSizeY;
+	private String serverIp;
+	private int serverPort;
 	
 	private ArrayList<Rectangle> displayObjects;
 	private ArrayList<DocumentItem> documentItems;
@@ -20,10 +22,6 @@ public class Profile {
 		documentItems = new ArrayList<DocumentItem>();
 	}
 
-	
-	public void setName(String name) {
-		this.name = name.toUpperCase();
-	}
 	
 	public void setPictureSize(String size) {
 		String[] aux = size.split("x");
@@ -47,48 +45,30 @@ public class Profile {
 		}
 	}
 	
-	public void addDisplayObject(Rectangle display) {
-		displayObjects.add(display);
-	}
-	
-	public void addDocumentItem(DocumentItem item ) {
-		documentItems.add(item);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public int getPictureSizeX() {
-		return pictureSizeX;
-	}
-
-	public int getPictureSizeY() {
-		return pictureSizeY;
-	}
-
-	public int getDocumentSizeX() {
-		return documentSizeX;
-	}
-
-	public int getDocumentSizeY() {
-		return documentSizeY;
-	}
-
-	public ArrayList<Rectangle> getDisplayObjects() {
-		return displayObjects;
-	}
-
-	public ArrayList<DocumentItem> getDocumentItems() {
-		return documentItems;
-	}
+	//==================   getters and setters =================================
+	public void setName(String name) { this.name = name.toUpperCase(); }
+	public void addDisplayObject(Rectangle display) { displayObjects.add(display); }
+	public void addDocumentItem(DocumentItem item ) { documentItems.add(item); }
+	public String getServerIp() { return serverIp; }
+	public int getServerPort() { return serverPort;}
+	public void setServerIp(String serverIp) {this.serverIp = serverIp;}
+	public void setServerPort(int serverPort) {this.serverPort = serverPort;}
+	public String getName() { return name; }
+	public int getPictureSizeX() { return pictureSizeX; }
+	public int getPictureSizeY() { return pictureSizeY; }
+	public int getDocumentSizeX() { return documentSizeX; }
+	public int getDocumentSizeY() {	return documentSizeY; }
+	public ArrayList<Rectangle> getDisplayObjects() { return displayObjects; }
+	public ArrayList<DocumentItem> getDocumentItems() {return documentItems; }
 	
 	// Overwritten to print to logs.
 	@Override
 	public String toString() {
 		String result = "Profile name: " + name;
-		result+="\nPicture size: " + pictureSizeX + "x" + pictureSizeY;
-		result+="\nDocument size: " + documentSizeX + "x" + documentSizeY;
+		result += "\nPicture size: " + pictureSizeX + "x" + pictureSizeY;
+		result += "\nDocument size: " + documentSizeX + "x" + documentSizeY;
+		result += "\nServer ip: " + serverIp;
+		result += "\nServer port: " + serverPort;
 		
 		for (Rectangle d: displayObjects) {
 			result+="\n" + d;
@@ -109,7 +89,9 @@ public class Profile {
 					prof.documentSizeX == this.documentSizeX &&
 					prof.documentSizeY == this.documentSizeY &&
 					prof.pictureSizeX == this.pictureSizeX &&
-					prof.pictureSizeY == this.pictureSizeY) {
+					prof.pictureSizeY == this.pictureSizeY &&
+					prof.serverPort == this.serverPort &&
+					prof.serverIp.equals(this.serverIp)) {
 				
 				for (int i=0; i<displayObjects.size(); i++) {
 					Rectangle r1 = prof.displayObjects.get(i);

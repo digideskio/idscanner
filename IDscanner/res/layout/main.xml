@@ -24,8 +24,11 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <!--android:layout_marginRight="8dip"
-            android:layout_marginTop="8dip"-->
+        <!--
+            android:layout_marginRight="8dip"
+            android:layout_marginTop="8dip"
+        -->
+
         <ImageButton
             android:id="@+id/camera_button"
             android:layout_width="wrap_content"
@@ -38,6 +41,7 @@
             android:gravity="center_vertical"
             android:onClick="onClickCamera"
             android:scaleType="center" />
+
         <ImageButton
             android:id="@+id/sync_button"
             android:layout_width="wrap_content"
@@ -52,55 +56,79 @@
             android:scaleType="center" />
     </RelativeLayout>
 
+    <!-- Here the results will be placed -->
+
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone" >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" 
             android:background="@color/result_view_background"
-            android:padding="4dip">
-
-            <LinearLayout
-                android:id="@+id/result_view"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="4dip" >
-
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="OCR results:" />
-            </LinearLayout>
+            android:padding="4dip" >
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="vertical"
+                android:padding="4dip" 
+                android:layout_alignParentLeft="true">
 
-                <Button
-                    android:id="@+id/result_button_cancel"
-                    android:layout_width="100dp"
+                <LinearLayout
+                    android:id="@+id/result_view"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:onClick="onClickCancel"
-                    android:text="Cancel" />
+                    android:orientation="vertical"
+                    android:padding="4dip" 
+                    >
 
-                <Button
-                    android:id="@+id/result_button_ok"
-                    android:layout_width="100dp"
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ocr_header"
+                        android:textColor="@color/text_header_color"
+                        android:textSize="18dip"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:onClick="onClickOk"
-                    android:text="OK" />
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:id="@+id/result_button_cancel"
+                        android:layout_width="160dip"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:onClick="onClickCancel"
+                        android:text="@string/cancel_button" />
+
+                    <Button
+                        android:id="@+id/result_button_ok"
+                        android:layout_width="160dip"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:onClick="onClickOk"
+                        android:text="@string/ok_button" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/images_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="2dip"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                >
+            </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 
 </FrameLayout>

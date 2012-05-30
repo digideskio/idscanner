@@ -88,10 +88,10 @@ public class IDdata {
 	private String seria;
 	private String CNP;
 	private char sex;
-	private int numarul;
-	private int cetatenia;
-	private int dataNasteri;
-	private int valabilitate;
+	private String numarul;
+	private String cetatenia;
+	private String dataNasteri;
+	private String valabilitate;
 
 
 	/**
@@ -137,17 +137,18 @@ public class IDdata {
 				this.seria += names[0].charAt(1);
 			}
 
-			this.numarul = Integer.valueOf( names[0].substring(2) );
-
-			this.cetatenia = Integer.valueOf( names[1].substring(0,4) );
-
-			this.dataNasteri = Integer.valueOf( names[1].substring(4,10) );
-
+			this.numarul = replaceWithNumbers( names[0].substring(2) );
+			this.cetatenia = replaceWithNumbers( names[1].substring(0,4) ) ;
+			this.dataNasteri = replaceWithNumbers( names[1].substring(4,10) ) ;
 			this.sex = names[1].charAt(11);
+			if (sex == 'H') {
+				sex = 'M';
+			}
+			
+			this.valabilitate = replaceWithNumbers(names[1].substring(12,18));
 
-			this.valabilitate = Integer.valueOf(names[1].substring(12,18));
-
-			this.CNP = (sex == 'M'?"1" : "2" + this.dataNasteri + names[1].substring(20,26));
+			this.CNP = sex == 'F'?"2" : "1";
+			this.CNP += this.dataNasteri + names[1].substring(20,26);
 			
 			this.validate();
 
@@ -184,9 +185,16 @@ public class IDdata {
 		//
 		// validate numarul
 		//
-		if (numarul < 100000 || numarul > 999999 ) {
+		try {
 			valid[3] = "1";
+			int nr = Integer.valueOf(numarul);
+			if ( nr >= 100000 && nr <= 999999 ) {
+				valid[3] = "0";
+			}
+		} catch (Exception e) {
+			Log.d(TAG, "Error validating seria.");
 		}
+
 		//
 		// validate sex
 		//
@@ -202,8 +210,41 @@ public class IDdata {
 		
 	}
 
-	private boolean isValidCNP(String cNP2) {
-		return true;
+	private boolean isValidCNP(String cnp) {
+		if ( cnp.length() == 13 && cnp.charAt(0) != '0') {
+			if ( ! isNumber(cnp)) {
+				cnp = replaceWithNumbers(cnp);
+			}
+			if ( isNumber(cnp)) {
+				try {
+					//int aa = Integer.valueOf(cnp.substring(1,3));
+					int ll = Integer.valueOf(cnp.substring(3,5));
+					int zz = Integer.valueOf(cnp.substring(5,7));
+					
+					if (ll <=12 && zz <= 31) {
+						int jj = Integer.valueOf(cnp.substring(7,9));
+						
+						if (jj<=52)
+							//
+							// Calculate control number?
+							//
+							return true;
+					}
+				} catch (Exception e) {
+					Log.d(TAG, "Error trying to process CNP.");
+					return false;
+				}
+			}
+			
+		}
+		return false;
+	}
+
+	private String replaceWithNumbers(String nr) {
+		nr = nr.replace("S", "5");
+		nr = nr.replace("O", "0");
+		nr = nr.replace("I", "1");
+		return nr;
 	}
 
 	private boolean isNumber(String cnp) {
@@ -288,64 +329,6 @@ public class IDdata {
 		return result;
 	}
 
-
-	public String getPictureLocation() {
-		return pictureLocation;
-	}
-
-	public String getNume() {
-		return nume;
-	}
-
-	public String getPrenume() {
-		return prenume;
-	}
-
-	public String getSeria() {
-		return seria;
-	}
-
-	public String getCNP() {
-		return CNP;
-	}
-
-	public char getSex() {
-		return sex;
-	}
-
-	public int getNumarul() {
-		return numarul;
-	}
-
-	public int getCetatenia() {
-		return cetatenia;
-	}
-
-	public int getDataNasteri() {
-		return dataNasteri;
-	}
-
-	public int getValabilitate() {
-		return valabilitate;
-	}
-
-	public void setPictureFile(String pictureFile) {
-		this.pictureLocation = pictureFile;
-	}
-
-	@Override
-	public String toString() {
-		String result = new String("");
-		ArrayList<String> strings = getGUIlist();
-
-		for (String s: strings) {
-			result += s + " ";
-		}
-
-		result += "Picture file: " + pictureLocation;
-		return result;
-	}
-
 	public void setField(String value, int i) {
 		try {
 			switch (i){
@@ -359,19 +342,19 @@ public class IDdata {
 				this.seria = value;
 				break;
 			case 3:
-				this.numarul = Integer.valueOf(value);
+				this.numarul = value;
 				break;
 			case 4:
-				this.cetatenia = Integer.valueOf(value);
+				this.cetatenia = value;
 				break;
 			case 5:
-				this.dataNasteri= Integer.valueOf(value);
+				this.dataNasteri= value;
 				break;
 			case 6:
 				this.sex = value.charAt(0);
 				break;
 			case 7:
-				this.valabilitate = Integer.valueOf(value);
+				this.valabilitate = value;
 				break;
 			case 8:
 				this.CNP = value;
@@ -382,7 +365,31 @@ public class IDdata {
 		}
 		
 	}
-	
+
+	public String getPictureLocation() {return pictureLocation;}
+	public String getNume() {return nume;}
+	public String getPrenume() {return prenume;}
+	public String getSeria() {return seria;}
+	public String getCNP() {return CNP;}
+	public char getSex() {return sex;}
+	public String getNumarul() {return numarul;}
+	public String getCetatenia() {return cetatenia;}
+	public String getDataNasteri() {return dataNasteri;}
+	public String getValabilitate() {return valabilitate;}
+	public void setPictureFile(String pictureFile) {this.pictureLocation = pictureFile;}
+
+	@Override
+	public String toString() {
+		String result = new String("");
+		ArrayList<String> strings = getGUIlist();
+
+		for (String s: strings) {
+			result += s + " ";
+		}
+
+		result += "Picture file: " + pictureLocation;
+		return result;
+	}
 }
 
 

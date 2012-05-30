@@ -2,14 +2,9 @@ package com.id.scanner.server;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
 
 public class DerbyDB {
 	private static String dbURL = "jdbc:derby:/home/petru/test/derby/IDdata;create=true;";
@@ -89,17 +84,6 @@ public class DerbyDB {
 		}
 	}
 
-	public void insertData(int id, String restName, String cityName) {
-		try {
-			stmt = conn.createStatement();
-			stmt.execute("insert into " + TABLE_NAME + " values (" + id + ",'"
-					+ restName + "','" + cityName + "')");
-			stmt.close();
-		} catch (SQLException sqlExcept) {
-			sqlExcept.printStackTrace();
-		}
-	}
-
 //	private static void selectRestaurants() {
 //		try {
 //			stmt = conn.createStatement();
@@ -161,10 +145,9 @@ public class DerbyDB {
 				insertQuery += " , \'" + values.get(i) + "\'";
 			}
 			
-//			insertQuery = insertQuery.substring(0, insertQuery.length()-2);
 			insertQuery += ")";
 			
-			System.out.println(insertQuery);
+//			System.out.println(insertQuery);
 			
 			boolean result = stmt.execute(insertQuery);
 			stmt.close();

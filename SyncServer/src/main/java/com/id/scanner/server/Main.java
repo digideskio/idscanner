@@ -1,8 +1,6 @@
 package com.id.scanner.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 
 public class Main {
@@ -18,7 +16,6 @@ public class Main {
             serverSocket = new ServerSocket(port);
             System.out.println("Connection Socket Created");
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             while (true) {
                 System.out.println("Waiting for Connection");
                 new SyncServer(serverSocket.accept(), db);
