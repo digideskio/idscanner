@@ -1,8 +1,10 @@
-package com.id.scanner;
+package com.id.scanner.ui;
 
 import java.io.File;
 import java.util.ArrayList;
 
+import com.id.scanner.camera.CameraManager;
+import com.id.scanner.camera.PictureManager;
 import com.id.scanner.core.IDdata;
 import com.id.scanner.core.Profile;
 import com.id.scanner.core.ProfileManager;
@@ -124,29 +126,29 @@ public class MainActivity extends Activity {
 			runningProgressDialog = false;
 			toast.cancel();
 			
-			data = new IDdata();
+			data = new IDdata(this);
 			
 			if (data.setRawText(text)) {
 				data.setPictureFile(pictureFile);
 				
 				ArrayList<String> results = data.getGUIlist(); 
-	
 				
 				ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
 				scrollView.setVisibility(View.VISIBLE);
 	
 				LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
 	
-				
-//				TextView tesseractText= new TextView(getApplication());
-//				tesseractText.setText(text);
-//				resultView.addView(tesseractText);
+				// comment this for final version
+				TextView tesseractText= new TextView(getApplication());
+				tesseractText.setText(text);
+				resultView.addView(tesseractText);
 				
 				
 				for (int i=0; i<results.size()-1; i=i+3 ) {
 					resultView.addView(addLinearLayout(results.get(i), results.get(i+1), results.get(i+2), i/3));
 				}
 	
+				// comment this for final version
 				TextView confidence = new TextView(getApplication());
 				confidence.setText("Confidence: " + c);
 				resultView.addView(confidence);
@@ -155,7 +157,11 @@ public class MainActivity extends Activity {
 				//
 				LinearLayout imageView = (LinearLayout) findViewById(R.id.images_view);
 				imageView.addView( this.getImageView() );
-				return;
+				
+				return;		// success !!!
+			} else {
+				toast = Toast.makeText(this, "Data could not be interpreted.", Toast.LENGTH_SHORT);
+				toast.show();
 			}
 		} else if ( c == -1 ) {		// hack for not finding any documents
 			toast = Toast.makeText(this, "No document was identified in the picture", Toast.LENGTH_SHORT);
@@ -166,7 +172,6 @@ public class MainActivity extends Activity {
 		}
 		// need to take another picture.
 		
-
 		if (counter < 15) {
 			counter++;
 			Log.d(TAG, "Rescanning.");
@@ -174,6 +179,7 @@ public class MainActivity extends Activity {
 		} else {
 			counter = 0;
 			progressDialog.dismiss();
+			toast.cancel();
 			runningProgressDialog = false;
 		}
 	}
@@ -192,7 +198,7 @@ public class MainActivity extends Activity {
 		result.setOrientation(LinearLayout.HORIZONTAL);
 		
 		TextView type = new TextView(getApplication());
-		type.setText(label);
+		type.setText(label + ":");
 		
 		EditText value = new EditText(getApplication());
 		value.setText(text);
@@ -245,7 +251,6 @@ public class MainActivity extends Activity {
 			data.setField(value, i);
 		}
 		
-		
 		DatabaseAdapter db = new DatabaseAdapter(getApplicationContext());
 		db.open();
 		db.insertData(data);
@@ -253,19 +258,20 @@ public class MainActivity extends Activity {
 		
 		Toast.makeText(this, "Inserted ID data into database.", Toast.LENGTH_SHORT).show();
 		
-		ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
-		scrollView.setVisibility(View.GONE);
-		//
-		// remove what was added so that on the next opening, everything is new.
-		//
-		((LinearLayout) findViewById(R.id.result_view)).removeAllViews();
+		this.onClickCancel(v);
 	}
 	
+	/**
+	 * Set the visibility to "GONE" for the scroll view.
+	 * Remove what was added so that on the next opening, everything is new.
+	 * @param v
+	 */
 	public void onClickCancel(View v) {
 		ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
 		scrollView.setVisibility(View.GONE);
-		
+
 		((LinearLayout) findViewById(R.id.result_view)).removeAllViews();
+		((LinearLayout) findViewById(R.id.images_view)).removeAllViews();
 	}
 
 	public static Context getMainApplicationContext() {

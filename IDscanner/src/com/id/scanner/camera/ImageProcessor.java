@@ -1,6 +1,7 @@
-package com.id.scanner;
+package com.id.scanner.camera;
 
 import com.id.scanner.core.ProfileManager;
+import com.id.scanner.util.FileUtils;
 
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -8,7 +9,7 @@ import android.util.Log;
 public class ImageProcessor {
 	private static final String TAG = ImageProcessor.class.getSimpleName();
 	
-	private static final int BLACK = 40;
+	private static final int BLACK = 45;
 	private Bitmap mImage;
 	private String imageFile;
 	

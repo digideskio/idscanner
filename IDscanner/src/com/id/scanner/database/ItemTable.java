@@ -3,8 +3,8 @@ package com.id.scanner.database;
 
 import java.util.ArrayList;
 
+import com.id.scanner.core.DocumentItem;
 import com.id.scanner.core.Profile;
-import com.id.scanner.xml.DocumentItem;
 
 import android.content.ContentValues;
 

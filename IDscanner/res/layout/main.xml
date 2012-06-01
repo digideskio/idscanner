@@ -5,14 +5,14 @@
 
     <!-- Use this for camera preview -->
 
-    <com.id.scanner.CameraSurface
+    <com.id.scanner.ui.CameraSurface
         android:id="@+id/camera_preview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
     <!-- Overlaid to make finding text areas easier -->
 
-    <com.id.scanner.RectanglesView
+    <com.id.scanner.ui.RectanglesView
         android:id="@+id/text_rectangles_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
@@ -24,11 +24,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <!--
-            android:layout_marginRight="8dip"
-            android:layout_marginTop="8dip"
-        -->
-
         <ImageButton
             android:id="@+id/camera_button"
             android:layout_width="wrap_content"
@@ -36,11 +31,9 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/camera"
             android:clickable="true"
-            android:contentDescription="Camera Button"
+            android:contentDescription="@string/cameraButonContentD"
             android:focusable="true"
-            android:gravity="center_vertical"
-            android:onClick="onClickCamera"
-            android:scaleType="center" />
+            android:onClick="onClickCamera"/>
 
         <ImageButton
             android:id="@+id/sync_button"
@@ -49,11 +42,9 @@
             android:layout_alignParentLeft="true"
             android:background="@drawable/sync_button"
             android:clickable="true"
-            android:contentDescription="Sync Button"
+            android:contentDescription="@string/syncButtonContentD"
             android:focusable="true"
-            android:gravity="center_vertical"
-            android:onClick="onClickSync"
-            android:scaleType="center" />
+            android:onClick="onClickSync"/>
     </RelativeLayout>
 
     <!-- Here the results will be placed -->

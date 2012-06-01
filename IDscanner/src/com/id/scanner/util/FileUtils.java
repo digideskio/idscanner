@@ -1,4 +1,4 @@
-package com.id.scanner;
+package com.id.scanner.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;

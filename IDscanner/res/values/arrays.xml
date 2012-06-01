@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="seriiBuletin">
+        <item>AR</item>
+        <item>AS</item>
+        <item>AX</item>
+        <item>BV</item>
+        <item>DD</item>
+        <item>DP</item>
+        <item>DR</item>
+        <item>DT</item>
+        <item>RD</item>
+        <item>RR</item>
+        <item>RT</item>
+        <item>RX</item>
+        <item>DX</item>
+        <item>GG</item>
+        <item>GL</item>
+        <item>GZ</item>
+        <item>HD</item>
+        <item>HR</item>
+        <item>IF</item>
+        <item>KL</item>
+        <item>KS</item>
+        <item>KT</item>
+        <item>KV</item>
+        <item>KX</item>
+        <item>MM</item>
+        <item>MS</item>
+        <item>MX</item>
+        <item>NT</item>
+        <item>OT</item>
+        <item>PH</item>
+        <item>PX</item>
+        <item>SB</item>
+        <item>SM</item>
+        <item>SV</item>
+        <item>SX</item>
+        <item>SZ</item>
+        <item>TC</item>
+        <item>TM</item>
+        <item>TR</item>
+        <item>VN</item>
+        <item>VS</item>
+        <item>VX</item>
+        <item>XB</item>
+        <item>XC</item>
+        <item>XH</item>
+        <item>XR</item>
+        <item>XT</item>
+        <item>XZ</item>
+    </string-array>
+
+</resources>

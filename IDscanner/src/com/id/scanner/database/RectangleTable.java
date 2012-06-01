@@ -4,7 +4,7 @@ package com.id.scanner.database;
 import java.util.ArrayList;
 
 import com.id.scanner.core.Profile;
-import com.id.scanner.xml.Rectangle;
+import com.id.scanner.core.Rectangle;
 
 import android.content.ContentValues;
 

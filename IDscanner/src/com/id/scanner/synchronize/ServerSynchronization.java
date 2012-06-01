@@ -48,7 +48,6 @@ public class ServerSynchronization extends Thread {
 		
 		try {
 			this.openConnection();
-			
 			//
 			// Write the messages according to the protocol.
 			//
@@ -76,6 +75,12 @@ public class ServerSynchronization extends Thread {
 		}
 	}
 
+	/**
+	 * Get a cursor on the data table from the database and send all the rows.
+	 * Also update the index.
+	 * @throws AuthenticationException
+	 * @throws IOException
+	 */
 	private void sendTableContent() throws AuthenticationException, IOException {
 		Cursor c = db.getDataTable(lastIndex);
 
@@ -117,7 +122,12 @@ public class ServerSynchronization extends Thread {
 		this.writeMessage(name);
 	}
 
-	
+	/**
+	 * Write a message and read the response from the server.
+	 * @param message
+	 * @throws IOException
+	 * @throws AuthenticationException
+	 */
 	private void writeMessage(String message) throws IOException, AuthenticationException {
 		output.println(message);
 		output.flush();
@@ -128,17 +138,32 @@ public class ServerSynchronization extends Thread {
 		}
 	}
 
-
+	/**
+	 * Create a message of type user:pass and send it to the server.
+	 * @throws IOException
+	 * @throws AuthenticationException
+	 */
 	private void authenticate() throws IOException, AuthenticationException {
-		this.writeMessage("user:pass");
+		ProfileManager pm = ProfileManager.getInstance();
+		String message = pm.getUser() + ":" + pm.getPass();
+		this.writeMessage(message);
 	}
 
+	/**
+	 * Open a socket to the server and assign an input reader and output writer. 
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 */
 	private void openConnection() throws UnknownHostException, IOException {
 		socket = new Socket(ip, port);
 		output = new PrintWriter(socket.getOutputStream());
 		input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 	
+	/**
+	 * Call the close method for all connection related variables.
+	 * @throws IOException
+	 */
 	private void closeConnection() throws IOException {
 		if (input != null) {
 			input.close();
@@ -151,6 +176,11 @@ public class ServerSynchronization extends Thread {
 		}
 	}
 	
+	/**
+	 * Send a stop message to the server.
+	 * @throws AuthenticationException
+	 * @throws IOException
+	 */
 	private void sendStop() throws AuthenticationException, IOException {
 		try {
 			this.writeMessage("stop");

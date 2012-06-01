@@ -1,6 +1,8 @@
-package com.id.scanner;
+package com.id.scanner.camera;
 
 import com.id.scanner.ocr.Tesseract;
+import com.id.scanner.ui.MainActivity;
+import com.id.scanner.util.FileUtils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,7 +46,7 @@ public class PictureManager implements PictureCallback{
 			//
 			// Use this for debugging  
 			//
-			if (confidence < 70) {
+			if (confidence < 65) {
 				FileUtils.writeNoTextImage(ocrZone);
 			}
 			

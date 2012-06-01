@@ -17,7 +17,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name="com.id.scanner.MainActivity"
+            android:name="com.id.scanner.ui.MainActivity"
             android:label="@string/app_name" 
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">

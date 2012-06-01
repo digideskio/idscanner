@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class DerbyDB {
-	private static String dbURL = "jdbc:derby:/home/petru/test/derby/IDdata;create=true;";
+	private static String dbURL = "jdbc:derby:IDdata;create=true;";
 
 	static final String TABLE_NAME = "IDdata";
 	
@@ -23,7 +23,7 @@ public class DerbyDB {
 	private static final String KEY_PICTURE = "Poza";
 	
 	private static final String TABLE_CREATE = "create table " + TABLE_NAME +
-			" ( "+ INDEX + " integer primary key, " +
+			" ( "+ INDEX + " integer primary key GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
 			KEY_FNAME + " varchar(25) not null, " +
 			KEY_LNAME + " varchar(25) not null, " +
 			KEY_S + " varchar(25) not null, " +
@@ -137,9 +137,9 @@ public class DerbyDB {
 			}
 			
 			insertQuery = insertQuery.substring(0, insertQuery.length()-2);
-			insertQuery += ") values (";
+			insertQuery += ") values ( \'";
 			
-			insertQuery += values.get(0);
+			insertQuery += values.get(0) + "\'";
 					
 			for (int i=1; i<values.size(); i++){
 				insertQuery += " , \'" + values.get(i) + "\'";

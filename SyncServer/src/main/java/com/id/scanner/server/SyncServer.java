@@ -117,11 +117,11 @@ public class SyncServer extends Thread{
 				
 				String[] aux = message.split(";");
 				
-				for (int  i=0; i<aux.length; i++) {
+				for (int  i=1; i<aux.length; i++) {
 					values.add(aux[i]);
 				}
 				if (db.insert(keys, values)) {
-					System.out.println("Inserted row nr " + values.get(0) + " into database.");
+					System.out.println("Inserted row into database.");
 				}
 				
 			} else {
@@ -131,7 +131,7 @@ public class SyncServer extends Thread{
 				keys = new ArrayList<String>();
 				String[] aux = message.split(";");
 				
-				for (int  i=0; i<aux.length; i++) {
+				for (int  i=1; i<aux.length; i++) {
 					keys.add(aux[i]);
 				}
 				

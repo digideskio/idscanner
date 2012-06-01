@@ -1,4 +1,4 @@
-package com.id.scanner.xml;
+package com.id.scanner.core;
 
 
 public class Rectangle {

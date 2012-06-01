@@ -1,4 +1,4 @@
-package com.id.scanner;
+package com.id.scanner.ui;
 
 import com.id.scanner.core.ProfileManager;
 

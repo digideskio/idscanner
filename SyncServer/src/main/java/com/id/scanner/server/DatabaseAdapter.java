@@ -44,7 +44,7 @@ public class DatabaseAdapter {
 		ArrayList<String> values = new ArrayList<String>();
 		
 		
-		for (int  i=0; i<str.length; i++) {
+		for (int  i=1; i<str.length; i++) {
 			keys.add(str[i]);
 			values.add(str2[i]);
 		}

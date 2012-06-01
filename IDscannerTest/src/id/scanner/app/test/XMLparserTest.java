@@ -2,9 +2,9 @@ package id.scanner.app.test;
 
 import java.util.ArrayList;
 
+import com.id.scanner.core.DocumentItem;
 import com.id.scanner.core.Profile;
-import com.id.scanner.xml.DocumentItem;
-import com.id.scanner.xml.Rectangle;
+import com.id.scanner.core.Rectangle;
 import com.id.scanner.xml.XMLparser;
 
 import junit.framework.TestCase;
@@ -23,6 +23,8 @@ public class XMLparserTest extends TestCase {
 		expected.setPictureSize("2592x1458");
 		expected.setServerIp("192.168.2.100");
 		expected.setServerPort(1212);
+		expected.setUser("user");
+		expected.setPass("pass");
 		
 		Rectangle rect = new Rectangle(152, 45, 1044, 675);
 		expected.addDisplayObject(rect);
@@ -36,7 +38,7 @@ public class XMLparserTest extends TestCase {
 		DocumentItem picture = new DocumentItem();
 		picture.setName("Picture");
 		picture.setType("picture");
-		picture.setValues(3, 8, 29, 34);
+		picture.setValues(4, 8, 28, 33);
 		expected.addDocumentItem(picture);
 		
 		assertEquals(expected, actual.get(0));

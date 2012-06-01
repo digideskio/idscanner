@@ -2,8 +2,6 @@ package com.id.scanner.core;
 
 import java.util.ArrayList;
 
-import com.id.scanner.xml.DocumentItem;
-import com.id.scanner.xml.Rectangle;
 
 import android.graphics.Point;
 
@@ -78,6 +76,8 @@ public class ProfileManager {
 	public void setCurrentProfile (Profile p) {profile = p;}
 	public String getIp() { return profile.getServerIp(); }
 	public int getPort() { return profile.getServerPort(); }
+	public String getUser() { return profile.getUser(); }
+	public String getPass() { return profile.getPass(); }
 }
 
 

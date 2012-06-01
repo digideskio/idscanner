@@ -1,6 +1,8 @@
-package com.id.scanner;
+package com.id.scanner.ui;
 
 import java.io.IOException;
+
+import com.id.scanner.camera.CameraManager;
 
 import android.content.Context;
 import android.util.AttributeSet;

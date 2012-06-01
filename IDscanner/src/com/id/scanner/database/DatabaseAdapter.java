@@ -17,7 +17,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
 	private static final String TAG = DatabaseAdapter.class.getSimpleName();
 	
 	private static final String DATABASE_NAME = "IDscanner";
-	private static final int DATABASE_VERSION = 9;
+	private static final int DATABASE_VERSION = 2;
 	
 	ArrayList<TableInterface> profileTables = new ArrayList<TableInterface>();
 	private DataTable dataTable;

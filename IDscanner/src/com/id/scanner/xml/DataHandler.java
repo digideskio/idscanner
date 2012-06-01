@@ -7,13 +7,15 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.id.scanner.core.DocumentItem;
 import com.id.scanner.core.Profile;
+import com.id.scanner.core.Rectangle;
 
 import android.util.Log;
 
 public class DataHandler extends DefaultHandler {
 	private static final String TAG = DataHandler.class.getSimpleName();
-	
+
 	private boolean _inProfile = false;
 	private boolean _inName = false;
 	private boolean _inPictureSize = false;
@@ -25,20 +27,23 @@ public class DataHandler extends DefaultHandler {
 	private boolean _inItemName = false;
 	private boolean _inIp = false;
 	private boolean _inPort= false;
-	
+	private boolean _inUser = false;
+	private boolean _inPass= false;
+
+
 	private ArrayList<Profile> profiles = new ArrayList<Profile>();
 	private Profile profile;
 	private DocumentItem documentItem;
 
-	
+
 	public ArrayList<Profile> getProfileData() {
 		return profiles;
 	}
-	
+
 	@Override
 	public void startDocument() throws SAXException {
 	}
-	
+
 	@Override
 	public void endDocument() throws SAXException {
 	}
@@ -46,7 +51,7 @@ public class DataHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName,
 			Attributes atts) throws SAXException {
-		
+
 		if (localName.equalsIgnoreCase("PROFILE")) {
 			profile= new Profile();
 			_inProfile=true;
@@ -65,7 +70,13 @@ public class DataHandler extends DefaultHandler {
 			} 
 			else if (localName.equalsIgnoreCase("SERVERPORT")) {
 				_inPort = true;
+			}
+			else if (localName.equalsIgnoreCase("USER")) {
+				_inUser = true;
 			} 
+			else if (localName.equalsIgnoreCase("PASS")) {
+				_inPass = true;
+			}
 			else if (localName.equalsIgnoreCase("DISPLAY")) {
 				_inDisplay = true;
 			} 
@@ -115,14 +126,14 @@ public class DataHandler extends DefaultHandler {
 			}
 		}
 	}
-	
+
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		if (localName.equalsIgnoreCase("PROFILE")) {
 			_inProfile = false;
 			profiles.add(profile);
-			
+
 		} else if (_inProfile) {
 			if (localName.equalsIgnoreCase("NAME")) {
 				_inName = false;
@@ -138,6 +149,12 @@ public class DataHandler extends DefaultHandler {
 			} 
 			else if (localName.equalsIgnoreCase("SERVERPORT")) {
 				_inPort = false;
+			}
+			else if (localName.equalsIgnoreCase("USER")) {
+				_inUser = false;
+			} 
+			else if (localName.equalsIgnoreCase("PASS")) {
+				_inPass = false;
 			}
 			else if (localName.equalsIgnoreCase("DISPLAY")) {
 				_inDisplay = false;
@@ -169,57 +186,49 @@ public class DataHandler extends DefaultHandler {
 			}
 		}
 	}
-	
+
 	@Override
-	public void characters(char[] ch, int start, int length)
-			throws SAXException {
+	public void characters(char[] ch, int start, int length) throws SAXException {
 		String chars = new String(ch, start, length); 
-	    chars = chars.trim();
-	    
-	    if (_inProfile) {
-	    	if (_inName) {
-	    		profile.setName(chars);
-	    	}
-	    	else if (_inPictureSize) {
-	    		try {
-	    			profile.setPictureSize(chars);
-	    		} catch (Exception e) {
-	    			Log.d(TAG, "Picture size incorectly specified in xml.");
-	    		}
-	    	}
-	    	else if (_inDocumentSize) {
-	    		try {
-	    			profile.setDocumentSize(chars);
-	    		} catch (Exception e) {
-	    			Log.d(TAG, "Document size incorectly specified in xml.");
-	    		}
-	    	} 
-	    	else if (_inIp) {
-	    		try {
-	    			profile.setServerIp(chars);
-	    		} catch (Exception e) {
-	    			Log.d(TAG, "Server ip incorectly specified in xml.");
-	    		}
-	    	}
-	    	else if (_inPort) {
-	    		try {
-	    			profile.setServerPort(Integer.valueOf(chars));
-	    		} catch (Exception e) {
-	    			Log.d(TAG, "Server ip incorectly specified in xml.");
-	    		}
-	    	}
-	    	else if (_inData) {
-	    		if (_inItem) {
-	    			if (_inItemName) {
-	    				this.documentItem.setName(chars);
-	    			} 
-	    			else if (_inType) {
-	    				this.documentItem.setType(chars);
-	    			}
-	    		}
-	    	}
-	    }
-	    
+		chars = chars.trim();
+
+		try {
+			if (_inProfile) {
+				if (_inName) {
+					profile.setName(chars);
+				}
+				else if (_inPictureSize) {
+					profile.setPictureSize(chars);
+				} else if (_inDocumentSize) {
+					profile.setDocumentSize(chars);
+				} 
+				else if (_inIp) {
+					profile.setServerIp(chars);
+				}
+				else if (_inPort) {
+					profile.setServerPort(Integer.valueOf(chars));
+				}
+				else if (_inUser) {
+					profile.setUser(chars);
+				}
+				else if (_inPass) {
+					profile.setPass(chars);
+				}
+				else if (_inData) {
+					if (_inItem) {
+						if (_inItemName) {
+							this.documentItem.setName(chars);
+						} 
+						else if (_inType) {
+							this.documentItem.setType(chars);
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
 

@@ -1,4 +1,4 @@
-package com.id.scanner;
+package com.id.scanner.camera;
 
 
 import java.io.IOException;

@@ -1,85 +1,33 @@
 package com.id.scanner.core;
 
+import id.scanner.app.R;
+
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.util.Log;
 
 public class IDdata {
 	private static final String TAG = IDdata.class.getSimpleName();
 	
 	// serii valide de buletin
-	private static final String[] serii = {
-		"AR",
-		"AS",
-		"AX",
-		"BV",
-		"DD",
-		"DP", "DR", "DT",
-		"RD", "RR", "RT",
-		"RX",
-		"DX",
-		"GG",
-		"GL",
-		"GZ",
-		"HD",
-		"HR",
-		"IF",
-		"KL",
-		"KS",
-		"KT",
-		"KV",
-		"KX",
-		"MM",
-		"MS",
-		"MX",
-		"NT",
-		"OT",
-		"PH",
-		"PX",
-		"SB",
-		"SM",
-		"SV",
-		"SX",
-		"SZ",
-		"TC",
-		"TM",
-		"TR",
-		"VN",
-		"VS",
-		"VX",
-		"XB",
-		"XC",
-		"XH",
-		"XR",
-		"XT",
-		"XZ"
-	};
-
+	private static String[] seriiBuletin;
+		
 	// used for GUI.
 	private static final String[] fields = {
-			"Nume:",			// 0
-			"Prenume:",			// 1
-			"Seria:",			// 2
-			"Numarul:",			// 3
-			"Cetatenia:",		// 4
-			"Data Nasterii:",	// 5
-			"Sexul:",			// 6
-			"Valabilitate:",	// 7
-			"CNP:"				// 8
+			"Nume",			// 0
+			"Prenume",			// 1
+			"Seria",			// 2
+			"Numarul",			// 3
+			"Cetatenia",		// 4
+			"Data Nasterii",	// 5
+			"Sexul",			// 6
+			"Valabilitate",	// 7
+			"CNP"				// 8
 	};
-	public static final int NR_OF_FIELDS = 9;		//  not such a good solution.
+	public static final int NR_OF_FIELDS = fields.length;
 	
-	private static final String[] valid = {
-		"0",
-		"0",
-		"0",
-		"0",
-		"0",
-		"0",
-		"0",
-		"0",
-		"0",
-	};
+	private static final String[] valid = { "0", "0", "0", "0", "0", "0", "0","0", "0"};
 
 	private String pictureLocation;
 
@@ -93,6 +41,11 @@ public class IDdata {
 	private String dataNasteri;
 	private String valabilitate;
 
+	
+	public IDdata(Context context){
+		seriiBuletin = context.getResources().getStringArray(R.array.seriiBuletin);
+	}
+	
 
 	/**
 	 * Process text and do validations.
@@ -177,8 +130,8 @@ public class IDdata {
 		// validate seria
 		//
 		valid[2] = "1";							// presupun ca seria este invalida, si incerc sa o validez
-		for (int i=0; i<serii.length; i++) {
-			if (serii[i].equals(seria)) {
+		for (int i=0; i<seriiBuletin.length; i++) {
+			if (seriiBuletin[i].equals(seria)) {
 				valid[2] = "0";
 			}
 		}
@@ -202,6 +155,12 @@ public class IDdata {
 			valid[6] = "1";
 		}
 		//
+		// Validate valabilitate
+		//
+		if ( ! isNumber(this.valabilitate)) {
+			valid[7] = "1";
+		}
+		//
 		// validate CNP
 		//
 		if ( ! (isNumber(CNP) && isValidCNP(CNP))) {
@@ -217,7 +176,7 @@ public class IDdata {
 			}
 			if ( isNumber(cnp)) {
 				try {
-					//int aa = Integer.valueOf(cnp.substring(1,3));
+					//int aa = Integer.valueOf(cnp.substring(1,3));	// any year is valid.
 					int ll = Integer.valueOf(cnp.substring(3,5));
 					int zz = Integer.valueOf(cnp.substring(5,7));
 					
@@ -247,9 +206,13 @@ public class IDdata {
 		return nr;
 	}
 
-	private boolean isNumber(String cnp) {
-		for (int i=0;i<cnp.length(); i++) {
-			if ( ! (cnp.charAt(i) >= '0' && cnp.charAt(i) <= '9' )) {
+	/**
+	 * @param string
+	 * @return			true if the string contains chars between 0 and 9.
+	 */
+	private boolean isNumber(String string) {
+		for (int i=0;i<string.length(); i++) {
+			if ( ! (string.charAt(i) >= '0' && string.charAt(i) <= '9' )) {
 				return false;
 			}
 		}
@@ -257,7 +220,6 @@ public class IDdata {
 	}
 
 	/**
-	 * 
 	 * @param nume2
 	 * @return		true if the string only contains upper case letters and spaces.
 	 */
