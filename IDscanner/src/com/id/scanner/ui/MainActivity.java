@@ -139,9 +139,9 @@ public class MainActivity extends Activity {
 				LinearLayout resultView = (LinearLayout) findViewById(R.id.result_view);
 	
 				// comment this for final version
-				TextView tesseractText= new TextView(getApplication());
-				tesseractText.setText(text);
-				resultView.addView(tesseractText);
+//				TextView tesseractText= new TextView(getApplication());
+//				tesseractText.setText(text);
+//				resultView.addView(tesseractText);
 				
 				
 				for (int i=0; i<results.size()-1; i=i+3 ) {
@@ -149,9 +149,14 @@ public class MainActivity extends Activity {
 				}
 	
 				// comment this for final version
-				TextView confidence = new TextView(getApplication());
-				confidence.setText("Confidence: " + c);
-				resultView.addView(confidence);
+//				TextView confidence = new TextView(getApplication());
+//				confidence.setText("Confidence: " + c);
+//				resultView.addView(confidence);
+				// comment this for final version
+//				TextView tries = new TextView(getApplication());
+//				tries.setText("Incercari: " + counter);
+//				resultView.addView(tries);
+				
 				//
 				// Add the image!
 				//
@@ -246,7 +251,7 @@ public class MainActivity extends Activity {
 		// Create a data object with the values from the GUI
 		// Use the old data object in case something goes wrong.
 		//
-		for (int i=0;i<IDdata.NR_OF_FIELDS;i++) {
+		for (int i=0 ; i < data.getNrOfFields() ; i++) {
 			String value = ((EditText)findViewById(i)).getText().toString();
 			data.setField(value, i);
 		}

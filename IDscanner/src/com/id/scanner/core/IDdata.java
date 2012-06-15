@@ -11,10 +11,10 @@ public class IDdata {
 	private static final String TAG = IDdata.class.getSimpleName();
 	
 	// serii valide de buletin
-	private static String[] seriiBuletin;
+	private String[] seriiBuletin;
 		
 	// used for GUI.
-	private static final String[] fields = {
+	private final String[] fields = {
 			"Nume",			// 0
 			"Prenume",			// 1
 			"Seria",			// 2
@@ -25,9 +25,9 @@ public class IDdata {
 			"Valabilitate",	// 7
 			"CNP"				// 8
 	};
-	public static final int NR_OF_FIELDS = fields.length;
+	public final int NR_OF_FIELDS = fields.length;
 	
-	private static final String[] valid = { "0", "0", "0", "0", "0", "0", "0","0", "0"};
+	private final String[] valid = { "0", "0", "0", "0", "0", "0", "0","0", "0"};
 
 	private String pictureLocation;
 
@@ -61,7 +61,7 @@ public class IDdata {
 				return false;
 			}
 
-			line[0].replace("0", "O");
+			line[0] = replaceWithChars(line[0]);
 			line[0] = line[0].substring(5);
 
 			String[] names = line[0].split("<");
@@ -101,7 +101,7 @@ public class IDdata {
 			this.valabilitate = replaceWithNumbers(names[1].substring(12,18));
 
 			this.CNP = sex == 'F'?"2" : "1";
-			this.CNP += this.dataNasteri + names[1].substring(20,26);
+			this.CNP += this.dataNasteri + replaceWithNumbers( names[1].substring(20,26));
 			
 			this.validate();
 
@@ -116,6 +116,10 @@ public class IDdata {
 	 * Validate that the data read is correct.
 	 */
 	private void validate() {
+		// just in case;
+		for (int i=0;i<NR_OF_FIELDS; i++) {
+			valid[i] = "0";
+		}
 		//
 		// Validate name and surname:
 		//
@@ -202,7 +206,17 @@ public class IDdata {
 	private String replaceWithNumbers(String nr) {
 		nr = nr.replace("S", "5");
 		nr = nr.replace("O", "0");
+		nr = nr.replace("D", "0");
 		nr = nr.replace("I", "1");
+		nr = nr.replace("B", "8");
+		return nr;
+	}
+	
+	private String replaceWithChars(String nr) {
+		nr = nr.replace("5" , "S");
+		nr = nr.replace("0" , "O");
+		nr = nr.replace("1" , "I");
+		nr = nr.replace("8" , "B");
 		return nr;
 	}
 
@@ -212,7 +226,7 @@ public class IDdata {
 	 */
 	private boolean isNumber(String string) {
 		for (int i=0;i<string.length(); i++) {
-			if ( ! (string.charAt(i) >= '0' && string.charAt(i) <= '9' )) {
+			if ( ! ((string.charAt(i) >= '0' && string.charAt(i) <= '9' ))) {
 				return false;
 			}
 		}
@@ -339,6 +353,7 @@ public class IDdata {
 	public String getDataNasteri() {return dataNasteri;}
 	public String getValabilitate() {return valabilitate;}
 	public void setPictureFile(String pictureFile) {this.pictureLocation = pictureFile;}
+	public int getNrOfFields() { return NR_OF_FIELDS; }
 
 	@Override
 	public String toString() {
