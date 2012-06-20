@@ -16,6 +16,7 @@ public class FileUtils {
 	private static final String DIR_NAME = "IDscanner";
 	private static final String PROBLEMS_DIR_DOC = "NoDocument/";
 	private static final String PROBLEMS_DIR_TESS = "NoText/";
+	private static final String TESS_DIR_DATA = "tessdata/";
 
 	/**
 	 * Write a bitmap to disk.
@@ -130,9 +131,30 @@ public class FileUtils {
 	    return mediaFile;
 	}
 	
+	/**
+	 * Verify if training data for tesseract was downloaded. 
+	 */
+	public static boolean verifyTessdata() {
+		String tessDir = getTessDataFolder();
+		File tessDataDir = new File(tessDir);
+		
+		if (! tessDataDir.exists() ) {
+			tessDataDir.mkdirs();
+			return false;
+		}
+		return true;
+	}
+
+	public static String getTessDataFolder() {
+		String result = getMediaStorageDir();
+		result += TESS_DIR_DATA ;
+		return result ;
+//		return "/sdcard/tesseract";
+	}
 	
-	private static String getMediaStorageDir() {
-		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), DIR_NAME);
+	public static String getMediaStorageDir() {
+//		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), DIR_NAME);
+		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), DIR_NAME);
 	    //
 	    // Create the storage directory if it does not exist
 	    //
@@ -148,4 +170,6 @@ public class FileUtils {
 	    }
 	    return result;
 	}
+
+
 }

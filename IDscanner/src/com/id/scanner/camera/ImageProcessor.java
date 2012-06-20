@@ -78,7 +78,7 @@ public class ImageProcessor {
 			return extractOCRzone(document);
 		}  else {
 			Log.d(TAG, "Problems encountered while trying to determine document margins.");
-			FileUtils.writeNoDocumentImage(mImage);
+//			FileUtils.writeNoDocumentImage(mImage);
 		}
 		return null;
 	}
@@ -117,7 +117,7 @@ public class ImageProcessor {
 			return result;
 		} else {
 			Log.d(TAG, "Problems encountered while trying to determine the image that will be processed.");
-			FileUtils.writeNoDocumentImage(image);
+//			FileUtils.writeNoDocumentImage(image);
 		}
 		return null;
 	}

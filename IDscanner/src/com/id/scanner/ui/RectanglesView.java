@@ -20,6 +20,9 @@ import android.view.View;
 public class RectanglesView extends View {
 	private static final String TAG = RectanglesView.class.getSimpleName();
 
+	private int[][] rectangles;
+	private Paint paint;
+	
 
 	public RectanglesView(Context context) {
 		super(context);
@@ -33,22 +36,19 @@ public class RectanglesView extends View {
 		super(context, attrs, defStyle);
 	}
 
-	
-	@Override
-	protected void onDraw(Canvas canvas) {
-		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	{
+		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setColor(Color.WHITE);
 		paint.setStyle(Style.STROKE);
 		paint.setStrokeWidth(3);
-		
-		// int[][] rectangles = {{152, 45, 1044, 675}};
-		ProfileManager pm = ProfileManager.getInstance();
-		int[][] rectangles = pm.getDispalys();
-		
+		rectangles = ProfileManager.getInstance().getDispalys();
+	}
+	
+	@Override
+	protected void onDraw(Canvas canvas) {
 		for (int i=0; i<rectangles.length; i++) {
 			canvas.drawRect(rectangles[i][0], rectangles[i][1], rectangles[i][2], rectangles[i][3], paint);
 		}
-		
 		Log.d(TAG, "Rectangles view created");
 	}
 

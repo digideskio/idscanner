@@ -1,6 +1,7 @@
 package com.id.scanner.ocr;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
+import com.id.scanner.util.FileUtils;
 
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -23,8 +24,8 @@ public class Tesseract {
 	public void runOcr() {
 		try {
 		TessBaseAPI tesseract = new TessBaseAPI();
-		tesseract.init("/mnt/sdcard/tesseract/", "ron");
-		//tesseract.setPageSegMode(TessBaseAPI.PSM_SINGLE_LINE);
+		tesseract.init(FileUtils.getMediaStorageDir(), "ron");
+
 		tesseract.setImage(mBitmap);
 		tesseract.setVariable("tessedit_char_whitelist", whitelist);
 		

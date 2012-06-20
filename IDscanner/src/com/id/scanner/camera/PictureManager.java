@@ -2,7 +2,6 @@ package com.id.scanner.camera;
 
 import com.id.scanner.ocr.Tesseract;
 import com.id.scanner.ui.MainActivity;
-import com.id.scanner.util.FileUtils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,8 +45,8 @@ public class PictureManager implements PictureCallback{
 			//
 			// Use this for debugging  
 			//
-			if (confidence < 65) {
-				FileUtils.writeNoTextImage(ocrZone);
+			if (confidence < MainActivity.MIN_CONFIDENCE) {
+//				FileUtils.writeNoTextImage(ocrZone);
 			}
 			
 			Log.d(TAG, "Teseract returned: " + text);
